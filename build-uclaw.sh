@@ -5,7 +5,7 @@
 # 用法: ./build-uclaw.sh
 # ============================================================
 
-set -e
+set -eo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 UCLAW_DIR="$SCRIPT_DIR/U-Claw"
@@ -104,21 +104,26 @@ cd "$UCLAW_DIR/openclaw"
 # 设置淘宝镜像
 "$NODE_BIN" "$NPM_BIN" config set registry https://registry.npmmirror.com --location=project 2>/dev/null || true
 
-# 安装依赖
-info "npm install 中...（可能需要几分钟）"
-"$NODE_BIN" "$NPM_BIN" install --registry=https://registry.npmmirror.com --prefer-offline 2>&1 | tail -5
+# 安装 pnpm（OpenClaw build 脚本依赖 pnpm）
+info "安装 pnpm..."
+"$NODE_BIN" "$NPM_BIN" install -g pnpm --registry=https://registry.npmmirror.com 2>&1 | tail -3
+PNPM_BIN="$NODE_DIR/bin/pnpm"
 
-ok "npm 依赖安装完成"
+# 安装依赖（使用 pnpm，与上游一致）
+info "pnpm install 中...（可能需要几分钟）"
+cd "$UCLAW_DIR/openclaw"
+"$NODE_BIN" "$PNPM_BIN" install --registry=https://registry.npmmirror.com 2>&1 | tail -5
+ok "依赖安装完成"
 
 # ---- 5. 构建 OpenClaw ----
 info "构建 OpenClaw..."
-# 检查是否有 pnpm 可用，OpenClaw 使用 pnpm build
-if [ -f "$UCLAW_DIR/openclaw/node_modules/.bin/tsdown" ]; then
-    # 尝试简单构建
-    cd "$UCLAW_DIR/openclaw"
-    "$NODE_BIN" "$NPM_BIN" run build 2>&1 | tail -10 || warn "build 可能有错误，继续..."
+cd "$UCLAW_DIR/openclaw"
+"$NODE_BIN" "$PNPM_BIN" run build 2>&1 | tail -10
+if [ -d "$UCLAW_DIR/openclaw/dist" ]; then
+    ok "构建成功，dist/ 已生成"
+else
+    error "构建失败：dist/ 目录未生成，请检查错误信息"
 fi
-ok "构建步骤完成"
 
 cd "$SCRIPT_DIR"
 

@@ -102,7 +102,7 @@ echo.
 echo   === 安装 npm 依赖 ===
 echo.
 cd /d "%OPENCLAW_DIR%"
-"%NODE_BIN%" "%NPM_BIN%" install --registry=https://registry.npmmirror.com
+call "%NPM_BIN%" install --registry=https://registry.npmmirror.com
 echo.
 echo   依赖安装完成!
 pause
@@ -115,10 +115,10 @@ echo.
 if not exist "%OPENCLAW_DIR%\node_modules" (
     echo   先安装依赖...
     cd /d "%OPENCLAW_DIR%"
-    "%NODE_BIN%" "%NPM_BIN%" install --registry=https://registry.npmmirror.com
+    call "%NPM_BIN%" install --registry=https://registry.npmmirror.com
 )
 cd /d "%OPENCLAW_DIR%"
-"%NODE_BIN%" "%NPM_BIN%" run build
+call "%NPM_BIN%" run build
 echo.
 echo   构建完成!
 pause
@@ -131,15 +131,22 @@ echo.
 if not exist "%OPENCLAW_DIR%\node_modules" (
     echo   先安装依赖...
     cd /d "%OPENCLAW_DIR%"
-    "%NODE_BIN%" "%NPM_BIN%" install --registry=https://registry.npmmirror.com
+    call "%NPM_BIN%" install --registry=https://registry.npmmirror.com
 )
 if not exist "%OPENCLAW_DIR%\dist" (
     echo   先构建...
     cd /d "%OPENCLAW_DIR%"
-    "%NODE_BIN%" "%NPM_BIN%" run build 2>nul
+    call "%NPM_BIN%" run build 2>nul
 )
 cd /d "%OPENCLAW_DIR%"
-"%NODE_BIN%" openclaw.mjs onboard --install-daemon 2>nul || "%NODE_BIN%" openclaw.mjs 2>nul || "%NODE_BIN%" "%NPM_BIN%" start
+REM 首次运行走 onboard，之后直接启动
+if not exist "%USERPROFILE%\.openclaw\openclaw.json" (
+    echo   首次配置...
+    "%NODE_BIN%" openclaw.mjs onboard --install-daemon
+)
+echo.
+echo   启动 OpenClaw 服务...
+"%NODE_BIN%" openclaw.mjs 2>nul || call "%NPM_BIN%" start
 pause
 goto MENU
 
@@ -166,7 +173,7 @@ if /i "%MODEL%"=="a" (
     set /p APIKEY="  请输入 DeepSeek API Key: "
     REM 移除旧配置再写入，避免重复
     if exist "%ENV_FILE%" (
-        findstr /v "^OPENAI_API_KEY= ^OPENAI_BASE_URL=" "%ENV_FILE%" > "%ENV_FILE%.tmp" 2>nul
+        findstr /v /r "^OPENAI_API_KEY= ^OPENAI_BASE_URL=" "%ENV_FILE%" > "%ENV_FILE%.tmp" 2>nul
         move /y "%ENV_FILE%.tmp" "%ENV_FILE%" >nul 2>nul
     )
     echo OPENAI_API_KEY=!APIKEY!>> "%ENV_FILE%"
@@ -179,7 +186,7 @@ if /i "%MODEL%"=="b" (
     echo   获取 API Key: https://platform.moonshot.cn/
     set /p APIKEY="  请输入 Moonshot API Key: "
     if exist "%ENV_FILE%" (
-        findstr /v "^OPENAI_API_KEY= ^OPENAI_BASE_URL=" "%ENV_FILE%" > "%ENV_FILE%.tmp" 2>nul
+        findstr /v /r "^OPENAI_API_KEY= ^OPENAI_BASE_URL=" "%ENV_FILE%" > "%ENV_FILE%.tmp" 2>nul
         move /y "%ENV_FILE%.tmp" "%ENV_FILE%" >nul 2>nul
     )
     echo OPENAI_API_KEY=!APIKEY!>> "%ENV_FILE%"
@@ -214,7 +221,7 @@ set /p CH="  请选择 (a-b): "
 
 if not exist "%OPENCLAW_DIR%\node_modules" (
     cd /d "%OPENCLAW_DIR%"
-    "%NODE_BIN%" "%NPM_BIN%" install --registry=https://registry.npmmirror.com
+    call "%NPM_BIN%" install --registry=https://registry.npmmirror.com
 )
 cd /d "%OPENCLAW_DIR%"
 "%NODE_BIN%" openclaw.mjs onboard
@@ -226,7 +233,7 @@ echo.
 echo   === 设置国内镜像源 ===
 echo.
 cd /d "%OPENCLAW_DIR%"
-"%NODE_BIN%" "%NPM_BIN%" config set registry https://registry.npmmirror.com --location=project
+call "%NPM_BIN%" config set registry https://registry.npmmirror.com --location=project
 echo   npm 镜像已设置: registry.npmmirror.com
 echo   后续 npm install 将自动使用淘宝镜像
 pause
@@ -238,7 +245,7 @@ echo   === 诊断修复 ===
 echo.
 if not exist "%OPENCLAW_DIR%\node_modules" (
     cd /d "%OPENCLAW_DIR%"
-    "%NODE_BIN%" "%NPM_BIN%" install --registry=https://registry.npmmirror.com
+    call "%NPM_BIN%" install --registry=https://registry.npmmirror.com
 )
 cd /d "%OPENCLAW_DIR%"
 "%NODE_BIN%" openclaw.mjs doctor --repair
@@ -323,7 +330,7 @@ set /p RESET_CHOICE="  选择重置级别: "
 if "%RESET_CHOICE%"=="0" goto MENU
 if not exist "%OPENCLAW_DIR%\node_modules" (
     cd /d "%OPENCLAW_DIR%"
-    "%NODE_BIN%" "%NPM_BIN%" install --registry=https://registry.npmmirror.com
+    call "%NPM_BIN%" install --registry=https://registry.npmmirror.com
 )
 cd /d "%OPENCLAW_DIR%"
 
@@ -340,7 +347,7 @@ goto MENU
 echo.
 echo   === 清理缓存 ===
 echo.
-"%NODE_BIN%" "%NPM_BIN%" cache clean --force 2>nul
+call "%NPM_BIN%" cache clean --force 2>nul
 echo   npm 缓存已清理
 if exist "%USERPROFILE%\.openclaw\logs" (
     rmdir /s /q "%USERPROFILE%\.openclaw\logs" 2>nul

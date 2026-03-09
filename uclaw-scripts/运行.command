@@ -65,7 +65,12 @@ fi
 if [ ! -d "$OPENCLAW_DIR/dist" ]; then
     echo -e "  ${YELLOW}首次运行，正在构建...${NC}"
     cd "$OPENCLAW_DIR"
-    "$NODE_BIN" "$NPM_BIN" run build 2>&1 || true
+    "$NODE_BIN" "$NPM_BIN" run build 2>&1
+    if [ ! -d "$OPENCLAW_DIR/dist" ]; then
+        echo -e "  ${RED}构建失败，请检查错误信息${NC}"
+        read -p "  按回车键退出..."
+        exit 1
+    fi
     echo ""
 fi
 
@@ -73,9 +78,16 @@ fi
 echo -e "  ${CYAN}正在启动 OpenClaw...${NC}"
 echo ""
 cd "$OPENCLAW_DIR"
-"$NODE_BIN" openclaw.mjs onboard --install-daemon 2>&1 || \
-"$NODE_BIN" openclaw.mjs 2>&1 || \
-"$NODE_BIN" "$NPM_BIN" start 2>&1
+
+# 首次运行走 onboard 配置，之后直接启动
+if [ ! -f "$HOME/.openclaw/openclaw.json" ]; then
+    echo -e "  ${YELLOW}首次配置...${NC}"
+    "$NODE_BIN" openclaw.mjs onboard --install-daemon 2>&1
+fi
+
+echo ""
+echo -e "  ${CYAN}启动 OpenClaw 服务...${NC}"
+"$NODE_BIN" openclaw.mjs 2>&1 || "$NODE_BIN" "$NPM_BIN" start 2>&1
 
 echo ""
 echo -e "  ${YELLOW}OpenClaw 已退出${NC}"

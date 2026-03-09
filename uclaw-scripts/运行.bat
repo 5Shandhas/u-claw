@@ -34,7 +34,7 @@ if not exist "%OPENCLAW_DIR%\node_modules" (
     echo   （使用淘宝镜像，请稍等）
     echo.
     cd /d "%OPENCLAW_DIR%"
-    "%NODE_BIN%" "%NPM_BIN%" install --registry=https://registry.npmmirror.com
+    call "%NPM_BIN%" install --registry=https://registry.npmmirror.com
     echo.
     echo   依赖安装完成!
     echo.
@@ -43,14 +43,21 @@ if not exist "%OPENCLAW_DIR%\node_modules" (
 if not exist "%OPENCLAW_DIR%\dist" (
     echo   首次运行，正在构建...
     cd /d "%OPENCLAW_DIR%"
-    "%NODE_BIN%" "%NPM_BIN%" run build 2>nul
+    call "%NPM_BIN%" run build 2>nul
     echo.
 )
 
 echo   正在启动 OpenClaw...
 echo.
 cd /d "%OPENCLAW_DIR%"
-"%NODE_BIN%" openclaw.mjs onboard --install-daemon 2>nul || "%NODE_BIN%" openclaw.mjs 2>nul || "%NODE_BIN%" "%NPM_BIN%" start
+REM 首次运行走 onboard，之后直接启动
+if not exist "%USERPROFILE%\.openclaw\openclaw.json" (
+    echo   首次配置...
+    "%NODE_BIN%" openclaw.mjs onboard --install-daemon
+)
+echo.
+echo   启动 OpenClaw 服务...
+"%NODE_BIN%" openclaw.mjs 2>nul || call "%NPM_BIN%" start
 
 echo.
 echo   OpenClaw 已退出

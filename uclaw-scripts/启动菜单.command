@@ -122,7 +122,11 @@ ensure_deps() {
     if [ ! -d "$OPENCLAW_DIR/dist" ]; then
         echo -e "  ${YELLOW}正在构建...${NC}"
         cd "$OPENCLAW_DIR"
-        "$NODE_BIN" "$NPM_BIN" run build 2>&1 || true
+        "$NODE_BIN" "$NPM_BIN" run build 2>&1
+        if [ ! -d "$OPENCLAW_DIR/dist" ]; then
+            echo -e "  ${RED}构建失败！请检查上方错误信息${NC}"
+            return 1
+        fi
         echo -e "  ${GREEN}构建完成${NC}"
     fi
 }
@@ -166,9 +170,13 @@ do_run() {
     echo ""
     ensure_deps
     cd "$OPENCLAW_DIR"
-    "$NODE_BIN" openclaw.mjs onboard --install-daemon 2>&1 || \
-    "$NODE_BIN" openclaw.mjs 2>&1 || \
-    "$NODE_BIN" "$NPM_BIN" start 2>&1
+    # 首次运行走 onboard，之后直接启动
+    if [ ! -f "$HOME/.openclaw/openclaw.json" ]; then
+        echo -e "  ${YELLOW}首次配置...${NC}"
+        "$NODE_BIN" openclaw.mjs onboard --install-daemon 2>&1
+    fi
+    echo -e "  ${CYAN}启动 OpenClaw 服务...${NC}"
+    "$NODE_BIN" openclaw.mjs 2>&1 || "$NODE_BIN" "$NPM_BIN" start 2>&1
 }
 
 # [5] 配置国产模型
