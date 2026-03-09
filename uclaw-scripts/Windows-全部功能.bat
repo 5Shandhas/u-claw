@@ -141,7 +141,7 @@ if not exist "%OPENCLAW_DIR%\node_modules" (
     call "%NPM_BIN%" install --registry=https://registry.npmmirror.com
 )
 cd /d "%OPENCLAW_DIR%"
-call "%NODE_BIN%" "%NPM_BIN%" run build
+call "%NPM_BIN%" run build
 echo.
 echo   构建完成!
 pause
@@ -162,7 +162,7 @@ if not exist "%OPENCLAW_DIR%\node_modules" (
 if not exist "%OPENCLAW_DIR%\dist" (
     echo   先构建...
     cd /d "%OPENCLAW_DIR%"
-    call "%NODE_BIN%" "%NPM_BIN%" run build
+    call "%NPM_BIN%" run build
 )
 cd /d "%OPENCLAW_DIR%"
 if not exist "%PORTABLE_CONFIG_PATH%" (

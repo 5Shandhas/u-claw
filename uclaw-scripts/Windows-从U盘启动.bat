@@ -54,7 +54,7 @@ if not exist "%OPENCLAW_DIR%\node_modules" (
 if not exist "%OPENCLAW_DIR%\dist" (
     echo   首次运行，正在构建...
     cd /d "%OPENCLAW_DIR%"
-    call "%NODE_BIN%" "%NPM_BIN%" run build
+    call "%NPM_BIN%" run build
     echo.
 )
 
