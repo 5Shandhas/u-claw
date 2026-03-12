@@ -1,6 +1,6 @@
 # OpenClaw 中国区完全指南
 
-> 综合参考 [hello-claw](https://github.com/datawhalechina/hello-claw)、[openclaw-docs](https://github.com/yeuxuan/openclaw-docs)、[awesome-openclaw-skills-zh](https://github.com/clawdbot-ai/awesome-openclaw-skills-zh) 等优秀社区教程
+> U-Claw 出品 · 综合整理自 OpenClaw 官方文档及社区资源
 
 ---
 
@@ -673,13 +673,27 @@ docker compose up -d
 
 ## 12. 社区资源
 
-### 教程
+### U-Claw（本项目）
 
-| 项目 | Stars | 说明 |
-|------|-------|------|
-| [hello-claw](https://github.com/datawhalechina/hello-claw) | 90+ | Datawhale 体系化教程 |
-| [openclaw-docs](https://github.com/yeuxuan/openclaw-docs) | 500+ | 276篇源码级文档 |
-| [awesome-openclaw-skills-zh](https://github.com/clawdbot-ai/awesome-openclaw-skills-zh) | 2500+ | 中文技能库 |
+| 项目 | 说明 |
+|------|------|
+| [U-Claw 官网](https://u-claw.org) | 下载、文档、技能市场 |
+| [U-Claw GitHub](https://github.com/dongsheng123132/u-claw) | 源码、Issue、Release |
+
+### 上游 & 官方
+
+| 项目 | 说明 |
+|------|------|
+| [OpenClaw 官方](https://github.com/openclaw/openclaw) | OpenClaw 上游仓库 |
+| [OpenClaw ClawHub](https://github.com/openclaw/clawhub) | 官方技能市场 |
+
+### 推荐阅读
+
+| 项目 | 说明 |
+|------|------|
+| [hello-claw](https://github.com/datawhalechina/hello-claw) | Datawhale 体系化入门教程 |
+| [openclaw-docs](https://github.com/yeuxuan/openclaw-docs) | 276 篇源码级深度文档 |
+| [awesome-openclaw-skills](https://github.com/VoltAgent/awesome-openclaw-skills) | 社区精选技能合集 |
 
 ### 工具
 
@@ -687,12 +701,6 @@ docker compose up -d
 |------|------|
 | [NapCatQQ](https://github.com/NapNeko/NapCatQQ) | QQ 机器人框架 |
 | [openclaw-wechat](https://github.com/icesword0760/openclaw-wechat) | 微信接入插件 |
-| [U-Claw](https://github.com/dongsheng123132/u-claw) | 本项目，离线安装盘 |
-
-### 社区
-
-- U-Claw 官网: [u-claw.org](https://u-claw.org)
-- OpenClaw 官方: [github.com/openclaw/openclaw](https://github.com/openclaw/openclaw)
 
 ---
 

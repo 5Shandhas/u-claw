@@ -83,7 +83,7 @@ ul{padding-left:20px}
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-logo">
     <h2>🦞 U-Claw 虾盘</h2>
-    <p>OpenClaw-CN 中文版使用指南</p>
+    <p>OpenClaw 使用指南</p>
   </div>
 
   <div class="search-box">
@@ -148,10 +148,10 @@ ul{padding-left:20px}
       <div class="nav-group-title" onclick="this.parentElement.classList.toggle('open')"><span class="arrow">▶</span> 📖 官方文档</div>
       <div class="nav-group-items">
         <a class="nav-item" href="https://www.u-claw.org" target="_blank">U-Claw 官网</a>
-        <a class="nav-item" href="https://clawd.org.cn" target="_blank">OpenClaw-CN 社区</a>
-        <a class="nav-item" href="https://clawd.org.cn/start/getting-started.html" target="_blank">OpenClaw 中文文档</a>
+        <a class="nav-item" href="https://u-claw.org" target="_blank">U-Claw 社区</a>
+        <a class="nav-item" href="https://u-claw.org" target="_blank">OpenClaw 中文文档</a>
         <a class="nav-item" href="https://github.com/dongsheng123132/u-claw" target="_blank">GitHub</a>
-        <a class="nav-item" href="https://clawd.org.cn/market/" target="_blank">在线技能市场</a>
+        <a class="nav-item" href="SkillHub.html" target="_blank">在线技能市场</a>
         <a class="nav-item" href="#" data-page="contact">联系我们</a>
       </div>
     </div>
@@ -163,10 +163,10 @@ ul{padding-left:20px}
 <!-- ===== 什么是 U-Claw ===== -->
 <div class="page active" id="page-intro">
 <h1>🦞 U-Claw 虾盘</h1>
-<p style="color:var(--dim);font-size:1.1em;margin-bottom:32px">OpenClaw-CN 中文版 · 插上 U 盘，AI 助手即刻可用</p>
+<p style="color:var(--dim);font-size:1.1em;margin-bottom:32px">OpenClaw · 插上 U 盘，AI 助手即刻可用</p>
 
 <div class="card">
-<p><strong>U-Claw（虾盘）</strong>是一个预装在 U 盘上的 AI 助手完整环境。基于 <a href="https://github.com/jiulingyun/openclaw-cn" target="_blank">OpenClaw-CN 中文社区版</a>（3700+ stars），把 Node.js、OpenClaw、所有依赖打包到 U 盘。</p>
+<p><strong>U-Claw（虾盘）</strong>是一个预装在 U 盘上的 AI 助手完整环境。基于 OpenClaw 开源框架，把 Node.js、OpenClaw、所有依赖打包到 U 盘。</p>
 </div>
 
 <h2>核心优势</h2>
@@ -223,17 +223,17 @@ ul{padding-left:20px}
 
 <h2>方法二：在线安装（需联网）</h2>
 <pre><code># macOS / Linux
-curl -fsSL https://clawd.org.cn/install.sh | bash
+curl -fsSL https://u-claw.org/install.sh | bash
 
 # Windows PowerShell
-iwr -useb https://clawd.org.cn/install.ps1 | iex
+iwr -useb https://u-claw.org/install.ps1 | iex
 
 # npm 国内镜像
-npm install -g openclaw-cn@latest --registry https://registry.npmmirror.com</code></pre>
+npm install -g openclaw@latest --registry https://registry.npmmirror.com</code></pre>
 
 <h2>安装后使用</h2>
-<pre><code>openclaw-cn onboard --install-daemon   # 首次配置
-openclaw-cn dashboard                   # 打开控制台</code></pre>
+<pre><code>openclaw onboard --install-daemon   # 首次配置
+openclaw dashboard                   # 打开控制台</code></pre>
 
 <div class="warn"><strong>安全提醒：</strong>共享电脑、公司电脑建议用 U 盘便携模式，不要安装到电脑。</div>
 </div>
@@ -246,7 +246,7 @@ openclaw-cn dashboard                   # 打开控制台</code></pre>
 <div class="step"><div class="step-num">2</div><div class="step-content">填写 API Key</div></div>
 <div class="step"><div class="step-num">3</div><div class="step-content">配置网关（自动完成）</div></div>
 <div class="step"><div class="step-num">4</div><div class="step-content">选择聊天平台（可跳过，后续添加）</div></div>
-<p>手动重新运行：<code>openclaw-cn onboard</code></p>
+<p>手动重新运行：<code>openclaw onboard</code></p>
 </div>
 
 <!-- ===== 国产模型 ===== -->
@@ -279,7 +279,7 @@ openclaw-cn dashboard                   # 打开控制台</code></pre>
 <h1>DeepSeek 配置指南</h1>
 <div class="warn"><strong>注意：</strong>onboard 向导中没有 DeepSeek 直接选项，需要选择 Custom Provider。</div>
 <h2>配置步骤</h2>
-<div class="step"><div class="step-num">1</div><div class="step-content">运行 <code>openclaw-cn onboard</code></div></div>
+<div class="step"><div class="step-num">1</div><div class="step-content">运行 <code>openclaw onboard</code></div></div>
 <div class="step"><div class="step-num">2</div><div class="step-content">选择 <strong>Custom Provider</strong></div></div>
 <div class="step"><div class="step-num">3</div><div class="step-content">填写信息：
 <pre><code>Base URL:  https://api.deepseek.com/v1
@@ -296,46 +296,46 @@ Alias:     deepseek（可自定义）</code></pre></div></div>
 <div class="step"><div class="step-num">2</div><div class="step-content"><strong>创建机器人</strong>，获取 AppID 和 AppSecret</div></div>
 <div class="step"><div class="step-num">3</div><div class="step-content"><strong>运行命令</strong>
 <pre><code># 安装 QQ 插件
-openclaw-cn plugins install @sliverp/qqbot@latest
+openclaw plugins install @sliverp/qqbot@latest
 
 # 绑定机器人
-openclaw-cn channels add --channel qqbot --token "你的AppID:你的AppSecret"
+openclaw channels add --channel qqbot --token "你的AppID:你的AppSecret"
 
 # 设置白名单（重要！）
-openclaw-cn config set channels.qqbot.allowFrom "你的QQ号"
+openclaw config set channels.qqbot.allowFrom "你的QQ号"
 
 # 重启网关
-openclaw-cn gateway restart</code></pre></div></div>
+openclaw gateway restart</code></pre></div></div>
 </div>
 
 <!-- ===== 飞书 ===== -->
 <div class="page" id="page-feishu">
 <h1>飞书接入</h1>
-<p>OpenClaw-CN 内置飞书支持（<code>feishu</code> 命令）。</p>
+<p>OpenClaw 内置飞书支持（<code>feishu</code> 命令）。</p>
 <pre><code># 安装飞书插件
-openclaw-cn plugins install @larksuiteoapi/feishu-openclaw-plugin
+openclaw plugins install @larksuiteoapi/feishu-openclaw-plugin
 
 # 运行配置向导
-openclaw-cn onboard</code></pre>
-<p>详细文档：<a href="https://clawd.org.cn/docs/channels/feishu" target="_blank">clawd.org.cn/docs/channels/feishu</a></p>
+openclaw onboard</code></pre>
+<p>详细文档：<a href="https://u-claw.org/docs/channels/feishu" target="_blank">u-claw.org/docs/channels/feishu</a></p>
 </div>
 
 <!-- ===== 钉钉 ===== -->
 <div class="page" id="page-dingtalk">
 <h1>钉钉接入</h1>
-<p>OpenClaw-CN 内置钉钉连接器。</p>
+<p>OpenClaw 内置钉钉连接器。</p>
 <pre><code># 运行配置向导会引导钉钉配置
-openclaw-cn onboard</code></pre>
-<p>详细文档：<a href="https://clawd.org.cn/docs/channels/dingtalk" target="_blank">clawd.org.cn/docs/channels/dingtalk</a></p>
+openclaw onboard</code></pre>
+<p>详细文档：<a href="https://u-claw.org/docs/channels/dingtalk" target="_blank">u-claw.org/docs/channels/dingtalk</a></p>
 </div>
 
 <!-- ===== 企业微信 ===== -->
 <div class="page" id="page-wecom">
 <h1>企业微信接入</h1>
-<p>OpenClaw-CN 内置企业微信 API 支持。</p>
+<p>OpenClaw 内置企业微信 API 支持。</p>
 <pre><code># 运行配置向导
-openclaw-cn onboard</code></pre>
-<p>详细文档：<a href="https://clawd.org.cn/docs/channels/wecom" target="_blank">clawd.org.cn/docs/channels/wecom</a></p>
+openclaw onboard</code></pre>
+<p>详细文档：<a href="https://u-claw.org/docs/channels/wecom" target="_blank">u-claw.org/docs/channels/wecom</a></p>
 </div>
 
 <!-- ===== Telegram ===== -->
@@ -343,9 +343,9 @@ openclaw-cn onboard</code></pre>
 <h1>Telegram 接入（最快）</h1>
 <pre><code># 1. 在 @BotFather 创建 Bot，获取 Token
 # 2. 添加渠道
-openclaw-cn channels add --channel telegram --token "你的Bot_Token"
+openclaw channels add --channel telegram --token "你的Bot_Token"
 # 3. 重启网关
-openclaw-cn gateway restart</code></pre>
+openclaw gateway restart</code></pre>
 </div>
 
 <!-- ===== 全部平台 ===== -->
@@ -385,7 +385,7 @@ openclaw-cn gateway restart</code></pre>
 <tr><td><code>discord</code></td><td>Discord 操作</td></tr>
 <tr><td><code>canvas</code></td><td>画布工具</td></tr>
 <tr><td><code>skill-creator</code></td><td>技能创建器</td></tr>
-<tr><td>... 等共 52 个</td><td>启动后运行 <code>openclaw-cn skills list</code> 查看全部</td></tr>
+<tr><td>... 等共 52 个</td><td>启动后运行 <code>openclaw skills list</code> 查看全部</td></tr>
 </table>
 </div>
 
@@ -441,23 +441,23 @@ clawhub install xiaohongshu-ops canghe-post-to-wechat douyin-publisher bilibili-
 </table>
 
 <div class="warn"><strong>安全提醒：</strong>ClawHub 曾发生供应链攻击事件，安装技能前请确认来源可信。推荐只安装上述经过社区验证的技能。</div>
-<div class="tip"><strong>更多技能：</strong><a href="https://clawd.org.cn/market/" target="_blank">clawd.org.cn/market</a> · <a href="https://skillhub.tencent.com/" target="_blank">SkillHub (腾讯)</a> · <a href="https://github.com/clawdbot-ai/awesome-openclaw-skills-zh" target="_blank">awesome-openclaw-skills-zh (2500+ stars)</a></div>
+<div class="tip"><strong>更多技能：</strong><a href="SkillHub.html">U-Claw 技能市场</a> · <a href="https://github.com/dongsheng123132/u-claw" target="_blank">U-Claw GitHub</a></div>
 </div>
 
 <!-- ===== 技能安装 ===== -->
 <div class="page" id="page-skills-install">
 <h1>技能安装与管理</h1>
 <pre><code># 查看已安装技能
-openclaw-cn skills list
+openclaw skills list
 
 # 安装新技能
-openclaw-cn skills install &lt;skill-name&gt;
+openclaw skills install &lt;skill-name&gt;
 
 # 从 ClawdHub 安装
-openclaw-cn skills install clawdhub/&lt;skill-name&gt;
+openclaw skills install clawdhub/&lt;skill-name&gt;
 
 # 创建自定义技能
-openclaw-cn skill-creator</code></pre>
+openclaw skill-creator</code></pre>
 </div>
 
 <!-- ===== 网页控制台 ===== -->
@@ -473,7 +473,7 @@ openclaw-cn skill-creator</code></pre>
 <li>查看聊天记录</li>
 <li>配置模型和参数</li>
 </ul>
-<p>手动打开：<code>openclaw-cn dashboard</code></p>
+<p>手动打开：<code>openclaw dashboard</code></p>
 </div>
 
 <!-- ===== 命令速查 ===== -->
@@ -481,21 +481,21 @@ openclaw-cn skill-creator</code></pre>
 <h1>常用命令速查</h1>
 <table>
 <tr><th>命令</th><th>说明</th></tr>
-<tr><td><code>openclaw-cn onboard</code></td><td>配置向导</td></tr>
-<tr><td><code>openclaw-cn dashboard</code></td><td>打开网页控制台</td></tr>
-<tr><td><code>openclaw-cn gateway run</code></td><td>启动网关</td></tr>
-<tr><td><code>openclaw-cn gateway status</code></td><td>查看网关状态</td></tr>
-<tr><td><code>openclaw-cn gateway restart</code></td><td>重启网关</td></tr>
-<tr><td><code>openclaw-cn doctor</code></td><td>诊断 + 修复</td></tr>
-<tr><td><code>openclaw-cn config</code></td><td>配置管理</td></tr>
-<tr><td><code>openclaw-cn channels</code></td><td>渠道管理</td></tr>
-<tr><td><code>openclaw-cn plugins list</code></td><td>已安装插件</td></tr>
-<tr><td><code>openclaw-cn skills list</code></td><td>已安装技能</td></tr>
-<tr><td><code>openclaw-cn models</code></td><td>模型配置</td></tr>
-<tr><td><code>openclaw-cn logs</code></td><td>网关日志</td></tr>
-<tr><td><code>openclaw-cn status</code></td><td>渠道状态</td></tr>
-<tr><td><code>openclaw-cn reset</code></td><td>重置配置</td></tr>
-<tr><td><code>openclaw-cn --help</code></td><td>完整帮助</td></tr>
+<tr><td><code>openclaw onboard</code></td><td>配置向导</td></tr>
+<tr><td><code>openclaw dashboard</code></td><td>打开网页控制台</td></tr>
+<tr><td><code>openclaw gateway run</code></td><td>启动网关</td></tr>
+<tr><td><code>openclaw gateway status</code></td><td>查看网关状态</td></tr>
+<tr><td><code>openclaw gateway restart</code></td><td>重启网关</td></tr>
+<tr><td><code>openclaw doctor</code></td><td>诊断 + 修复</td></tr>
+<tr><td><code>openclaw config</code></td><td>配置管理</td></tr>
+<tr><td><code>openclaw channels</code></td><td>渠道管理</td></tr>
+<tr><td><code>openclaw plugins list</code></td><td>已安装插件</td></tr>
+<tr><td><code>openclaw skills list</code></td><td>已安装技能</td></tr>
+<tr><td><code>openclaw models</code></td><td>模型配置</td></tr>
+<tr><td><code>openclaw logs</code></td><td>网关日志</td></tr>
+<tr><td><code>openclaw status</code></td><td>渠道状态</td></tr>
+<tr><td><code>openclaw reset</code></td><td>重置配置</td></tr>
+<tr><td><code>openclaw --help</code></td><td>完整帮助</td></tr>
 </table>
 </div>
 
@@ -515,18 +515,18 @@ openclaw-cn skill-creator</code></pre>
 <div class="page" id="page-doctor">
 <h1>诊断修复</h1>
 <pre><code># 运行诊断
-openclaw-cn doctor
+openclaw doctor
 
 # 强制启动（端口被占用时）
-openclaw-cn gateway run --force
+openclaw gateway run --force
 
 # 查看日志
-openclaw-cn logs</code></pre>
+openclaw logs</code></pre>
 <h2>常见问题排查</h2>
 <ul>
 <li><strong>端口 18789 被占用</strong> — 加 <code>--force</code> 参数</li>
-<li><strong>控制台打不开</strong> — 先运行 <code>openclaw-cn gateway status</code> 确认网关在跑</li>
-<li><strong>渠道连不上</strong> — 检查 API Key 是否正确，运行 <code>openclaw-cn status</code></li>
+<li><strong>控制台打不开</strong> — 先运行 <code>openclaw gateway status</code> 确认网关在跑</li>
+<li><strong>渠道连不上</strong> — 检查 API Key 是否正确，运行 <code>openclaw status</code></li>
 </ul>
 </div>
 
@@ -543,11 +543,11 @@ openclaw-cn logs</code></pre>
 <h3>Q: Windows 需要 WSL 吗？</h3>
 <p>不需要。自带 Windows 版 Node.js。</p>
 <h3>Q: 怎么更新？</h3>
-<p>U 盘模式：替换 <code>openclaw/</code> 目录。安装模式：<code>openclaw-cn update</code></p>
+<p>U 盘模式：替换 <code>openclaw/</code> 目录。安装模式：<code>openclaw update</code></p>
 <h3>Q: 配置文件在哪？</h3>
 <p>U 盘：<code>portable-home/.openclaw/openclaw.json</code><br>安装：<code>~/.openclaw/openclaw.json</code></p>
 <h3>Q: 和原版 OpenClaw 的区别？</h3>
-<p>使用 <a href="https://github.com/jiulingyun/openclaw-cn" target="_blank">OpenClaw-CN 中文社区版</a>，全中文界面，内置飞书/钉钉/企业微信，国内网络优化。功能完整，定期同步上游。</p>
+<p>基于 OpenClaw 官方版本，配合 U-Claw 中文配置界面，国内镜像加速，开箱即用。</p>
 </div>
 </div>
 
