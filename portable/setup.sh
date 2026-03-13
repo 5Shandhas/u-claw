@@ -9,7 +9,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$SCRIPT_DIR/app"
-CORE_DIR="$APP_DIR/core"
+CORE_DIR="$APP_DIR/core-mac"
 RUNTIME_DIR="$APP_DIR/runtime"
 MIRROR="https://registry.npmmirror.com"
 NODE_MIRROR="https://npmmirror.com/mirrors/node"
@@ -49,11 +49,11 @@ fi
 echo -e "  系统: ${GREEN}$OS $ARCH${NC}"
 echo ""
 
-# ---- 1. Download Node.js ----
+# ---- 1. Download Node.js (Current Platform) ----
 NODE_TARGET="$RUNTIME_DIR/$NODE_DIR_NAME"
 
 if [ -f "$NODE_TARGET/bin/node" ]; then
-    echo -e "  ${GREEN}✓${NC} Node.js 已存在，跳过下载"
+    echo -e "  ${GREEN}✓${NC} Node.js ($PLATFORM) 已存在，跳过下载"
 else
     echo -e "  ${CYAN}↓${NC} 下载 Node.js $NODE_VERSION ($PLATFORM)..."
     mkdir -p "$NODE_TARGET"
@@ -64,10 +64,42 @@ else
     curl -fSL "$NODE_URL" | tar xz -C "$NODE_TARGET" --strip-components=1
 
     if [ -f "$NODE_TARGET/bin/node" ]; then
-        echo -e "  ${GREEN}✓${NC} Node.js 下载完成"
+        echo -e "  ${GREEN}✓${NC} Node.js ($PLATFORM) 下载完成"
     else
         echo -e "  ${RED}✗ Node.js 下载失败${NC}"
         exit 1
+    fi
+fi
+
+# ---- 1b. Download Node.js for Windows (Cross-platform support) ----
+WIN_NODE_TARGET="$RUNTIME_DIR/node-win-x64"
+if [ -f "$WIN_NODE_TARGET/node.exe" ]; then
+    echo -e "  ${GREEN}✓${NC} Node.js (win-x64) 已存在，跳过下载"
+else
+    echo -e "  ${CYAN}↓${NC} 下载 Node.js $NODE_VERSION (win-x64) - Windows支持..."
+    mkdir -p "$WIN_NODE_TARGET"
+
+    WIN_NODE_URL="$NODE_MIRROR/$NODE_VERSION/node-$NODE_VERSION-win-x64.zip"
+    echo "    $WIN_NODE_URL"
+
+    # Download zip file to temp, extract, then move
+    TMP_ZIP="/tmp/node-win-x64-$$.zip"
+    curl -fSL "$WIN_NODE_URL" -o "$TMP_ZIP"
+
+    # Use unzip if available, otherwise try native tools
+    if command -v unzip >/dev/null 2>&1; then
+        unzip -q "$TMP_ZIP" -d "/tmp/node-win-extract-$$"
+        cp -r "/tmp/node-win-extract-$$"/node-$NODE_VERSION-win-x64/* "$WIN_NODE_TARGET/"
+        rm -rf "/tmp/node-win-extract-$$"
+    else
+        echo -e "    ${RED}✗ unzip not found, skipping Windows runtime${NC}"
+    fi
+    rm -f "$TMP_ZIP"
+
+    if [ -f "$WIN_NODE_TARGET/node.exe" ]; then
+        echo -e "  ${GREEN}✓${NC} Node.js (win-x64) 下载完成"
+    else
+        echo -e "  ${CYAN}⚠${NC}  Windows runtime下载失败 (不影响当前平台使用)"
     fi
 fi
 

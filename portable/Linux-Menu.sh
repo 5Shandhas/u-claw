@@ -1,10 +1,10 @@
 #!/bin/bash
 # U-Claw Menu - Portable AI Agent
-# macOS version
+# Linux version
 
 UCLAW_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$UCLAW_DIR/app"
-CORE_DIR="$APP_DIR/core-mac"
+CORE_DIR="$APP_DIR/core"
 DATA_DIR="$UCLAW_DIR/data"
 STATE_DIR="$DATA_DIR/.openclaw"
 CONFIG_PATH="$STATE_DIR/openclaw.json"
@@ -18,8 +18,17 @@ NC='\033[0m'
 BOLD='\033[1m'
 DIM='\033[2m'
 
-# Node.js (ARM64 only)
-NODE_DIR="$APP_DIR/runtime/node-mac-arm64"
+# Node.js
+ARCH=$(uname -m)
+if [ "$ARCH" = "x86_64" ]; then
+    NODE_DIR="$APP_DIR/runtime/node-linux-x64"
+elif [ "$ARCH" = "aarch64" ]; then
+    NODE_DIR="$APP_DIR/runtime/node-linux-arm64"
+else
+    echo -e "${RED}Unsupported architecture: $ARCH${NC}"
+    exit 1
+fi
+
 NODE_BIN="$NODE_DIR/bin/node"
 NPM_BIN="$NODE_DIR/bin/npm"
 export PATH="$NODE_DIR/bin:$PATH"
@@ -31,11 +40,6 @@ mkdir -p "$STATE_DIR" "$DATA_DIR/memory" "$DATA_DIR/backups" "$DATA_DIR/logs"
 
 # Load maintenance functions
 source "$UCLAW_DIR/lib/maintain.sh"
-
-# Remove macOS quarantine
-if xattr -l "$NODE_BIN" 2>/dev/null | grep -q "com.apple.quarantine"; then
-    xattr -rd com.apple.quarantine "$UCLAW_DIR" 2>/dev/null || true
-fi
 
 # Run openclaw command
 OPENCLAW_MJS="$CORE_DIR/node_modules/openclaw/openclaw.mjs"
@@ -55,7 +59,7 @@ show_menu() {
     echo ""
     echo -e "  ${CYAN}${BOLD}╔══════════════════════════════════════╗"
     echo -e "  ║   U-Claw 虾盘 v1.1                   ║"
-    echo -e "  ║   Portable AI Agent                   ║"
+    echo -e "  ║   Portable AI Agent (Linux)           ║"
     echo -e "  ╚══════════════════════════════════════╝${NC}"
     echo ""
     echo -e "  Node: ${GREEN}${NODE_VER}${NC}  配置: ${CFG_STATUS}"
@@ -114,7 +118,7 @@ do_dashboard() {
 
     # Find free port
     local PORT=18789
-    while lsof -i :$PORT >/dev/null 2>&1; do
+    while ss -tlnp 2>/dev/null | grep -q ":$PORT " || netstat -tlnp 2>/dev/null | grep -q ":$PORT "; do
         PORT=$((PORT + 1))
         if [ $PORT -gt 18799 ]; then
             echo -e "  ${RED}端口 18789-18799 全被占用${NC}"
@@ -132,7 +136,7 @@ do_dashboard() {
         if curl --noproxy '*' -s -o /dev/null "http://127.0.0.1:$PORT/" 2>/dev/null; then
             local URL="http://127.0.0.1:$PORT/#token=$TOKEN"
             echo -e "  ${GREEN}控制台: $URL${NC}"
-            open "$URL" 2>/dev/null
+            xdg-open "$URL" 2>/dev/null || echo -e "  ${YELLOW}请在浏览器打开: $URL${NC}"
             break
         fi
     done
@@ -255,9 +259,10 @@ do_restore() {
 # [8] System info
 do_sysinfo() {
     echo ""
-    echo "  系统:  $(sw_vers -productName 2>/dev/null) $(sw_vers -productVersion 2>/dev/null)"
-    echo "  CPU:   $(uname -m)"
-    echo "  内存:  $(sysctl -n hw.memsize 2>/dev/null | awk '{printf "%.0f GB", $1/1024/1024/1024}')"
+    echo "  系统:  $(uname -s) $(uname -r)"
+    echo "  发行版: $(cat /etc/os-release 2>/dev/null | grep ^PRETTY_NAME | cut -d= -f2 | tr -d '"' || echo 'Unknown')"
+    echo "  CPU:   $(uname -m) $(lscpu 2>/dev/null | grep 'Model name' | sed 's/.*:\s*//' || echo '')"
+    echo "  内存:  $(free -h 2>/dev/null | awk '/^Mem:/{print $2}' || echo 'N/A')"
     echo "  Node:  $("$NODE_BIN" --version 2>/dev/null)"
     echo "  路径:  $UCLAW_DIR"
     echo "  大小:  $(du -sh "$UCLAW_DIR" 2>/dev/null | cut -f1)"

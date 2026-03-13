@@ -1,12 +1,12 @@
 #!/bin/bash
 # ============================================================
 # U-Claw - Portable AI Agent
-# Double-click to start / 双击启动
+# Linux version - run: bash Linux-Start.sh
 # ============================================================
 
 UCLAW_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$UCLAW_DIR/app"
-CORE_DIR="$APP_DIR/core-mac"
+CORE_DIR="$APP_DIR/core"
 DATA_DIR="$UCLAW_DIR/data"
 SYSTEM_DIR="$UCLAW_DIR/system"
 
@@ -21,20 +21,21 @@ echo ""
 echo -e "${CYAN}"
 echo "  ╔══════════════════════════════════════╗"
 echo "  ║     🦞 U-Claw v1.1                  ║"
-echo "  ║     Portable AI Agent               ║"
+echo "  ║     Portable AI Agent (Linux)        ║"
 echo "  ╚══════════════════════════════════════╝"
 echo -e "${NC}"
 
 # ---- 1. Detect CPU & set runtime ----
 ARCH=$(uname -m)
-if [ "$ARCH" = "arm64" ]; then
-    NODE_DIR="$APP_DIR/runtime/node-mac-arm64"
-    echo -e "  ${GREEN}Apple Silicon (M series)${NC}"
-elif [ "$ARCH" = "x86_64" ]; then
-    NODE_DIR="$APP_DIR/runtime/node-mac-x64"
-    echo -e "  ${GREEN}Intel Mac (x64)${NC}"
+if [ "$ARCH" = "x86_64" ]; then
+    NODE_DIR="$APP_DIR/runtime/node-linux-x64"
+    echo -e "  ${GREEN}Linux x86_64${NC}"
+elif [ "$ARCH" = "aarch64" ]; then
+    NODE_DIR="$APP_DIR/runtime/node-linux-arm64"
+    echo -e "  ${GREEN}Linux ARM64${NC}"
 else
     echo -e "  ${RED}Unsupported architecture: $ARCH${NC}"
+    echo -e "  ${RED}Only x86_64 and arm64 are supported.${NC}"
     echo ""
     read -p "  Press Enter to exit..."
     exit 1
@@ -43,17 +44,11 @@ fi
 NODE_BIN="$NODE_DIR/bin/node"
 export PATH="$NODE_DIR/bin:$PATH"
 
-# ---- 2. Remove macOS quarantine ----
-if xattr -l "$NODE_BIN" 2>/dev/null | grep -q "com.apple.quarantine"; then
-    echo -e "  ${YELLOW}Removing macOS security restriction...${NC}"
-    xattr -rd com.apple.quarantine "$UCLAW_DIR" 2>/dev/null || true
-    echo -e "  ${GREEN}Done${NC}"
-fi
-
-# ---- 3. Check runtime ----
+# ---- 2. Check runtime ----
 if [ ! -f "$NODE_BIN" ]; then
     echo -e "  ${RED}Error: Node.js runtime not found${NC}"
-    echo "  Please ensure app/runtime/ is complete"
+    echo "  Expected: $NODE_BIN"
+    echo "  Please run setup.sh first or ensure app/runtime/ is complete"
     read -p "  Press Enter to exit..."
     exit 1
 fi
@@ -62,7 +57,7 @@ NODE_VER=$("$NODE_BIN" --version)
 echo -e "  Node.js: ${GREEN}${NODE_VER}${NC}"
 echo ""
 
-# ---- 4. Check & init data ----
+# ---- 3. Check & init data ----
 mkdir -p "$DATA_DIR/memory" "$DATA_DIR/backups" "$DATA_DIR/logs"
 
 if [ ! -f "$DATA_DIR/config.json" ] && [ ! -f "$DATA_DIR/.openclaw/openclaw.json" ]; then
@@ -80,7 +75,7 @@ CFGEOF
     echo ""
 fi
 
-# ---- 5. Set environment (portable mode) ----
+# ---- 4. Set environment (portable mode) ----
 STATE_DIR="$DATA_DIR/.openclaw"
 mkdir -p "$STATE_DIR"
 
@@ -93,12 +88,12 @@ export OPENCLAW_HOME="$DATA_DIR"
 export OPENCLAW_STATE_DIR="$STATE_DIR"
 export OPENCLAW_CONFIG_PATH="$STATE_DIR/openclaw.json"
 
-# ---- 6. Run migration if exists ----
+# ---- 5. Run migration if exists ----
 if [ -f "$SYSTEM_DIR/migrate.js" ]; then
     "$NODE_BIN" "$SYSTEM_DIR/migrate.js" "$DATA_DIR" 2>/dev/null || true
 fi
 
-# ---- 7. Check dependencies ----
+# ---- 6. Check dependencies ----
 if [ ! -d "$CORE_DIR/node_modules" ]; then
     echo -e "  ${YELLOW}First run - installing dependencies...${NC}"
     echo "  (Using China mirror)"
@@ -108,11 +103,9 @@ if [ ! -d "$CORE_DIR/node_modules" ]; then
     echo ""
 fi
 
-# OpenClaw doesn't need a separate build step when installed via npm
-
-# ---- 8. Find available port ----
+# ---- 7. Find available port ----
 PORT=18789
-while lsof -i :$PORT >/dev/null 2>&1; do
+while ss -tlnp 2>/dev/null | grep -q ":$PORT " || netstat -tlnp 2>/dev/null | grep -q ":$PORT "; do
     echo -e "  ${YELLOW}Port $PORT in use, trying next...${NC}"
     PORT=$((PORT + 1))
     if [ $PORT -gt 18799 ]; then
@@ -127,14 +120,16 @@ if [ $PORT -ne 18789 ]; then
     "$NODE_BIN" -e "
         const fs = require('fs');
         const p = '$DATA_DIR/config.json';
-        const c = JSON.parse(fs.readFileSync(p, 'utf8'));
-        c.gateway = c.gateway || {};
-        c.gateway.port = $PORT;
-        fs.writeFileSync(p, JSON.stringify(c, null, 2));
+        if (fs.existsSync(p)) {
+            const c = JSON.parse(fs.readFileSync(p, 'utf8'));
+            c.gateway = c.gateway || {};
+            c.gateway.port = $PORT;
+            fs.writeFileSync(p, JSON.stringify(c, null, 2));
+        }
     " 2>/dev/null || true
 fi
 
-# ---- 9. Start gateway ----
+# ---- 8. Start gateway ----
 echo -e "  ${CYAN}Starting OpenClaw on port $PORT...${NC}"
 echo "  Do NOT close this window."
 echo ""
@@ -148,7 +143,7 @@ GW_LOG="$DATA_DIR/logs/gateway.log"
 "$NODE_BIN" "$OPENCLAW_MJS" gateway run --allow-unconfigured --force --port $PORT 2>&1 | tee -a "$GW_LOG" &
 GW_PID=$!
 
-# ---- 10. Wait & open browser ----
+# ---- 9. Wait & open browser ----
 for i in $(seq 1 30); do
     sleep 0.5
     if curl -s -o /dev/null -w '' "http://127.0.0.1:$PORT/" 2>/dev/null; then
@@ -171,13 +166,13 @@ for p in ['$STATE_DIR/openclaw.json','$DATA_DIR/config.json']:
         if [ "$HAS_MODEL" = "yes" ]; then
             echo -e "  ${CYAN}Dashboard: ${DASHBOARD_URL}${NC}"
             echo ""
-            open "$DASHBOARD_URL" 2>/dev/null
+            xdg-open "$DASHBOARD_URL" 2>/dev/null || echo -e "  ${YELLOW}Please open in browser: ${DASHBOARD_URL}${NC}"
         else
             echo -e "  ${YELLOW}首次使用，打开配置页面...${NC}"
             echo -e "  ${CYAN}配置页面: Config.html${NC}"
             echo -e "  ${CYAN}控制台: ${DASHBOARD_URL}${NC}"
             echo ""
-            open "$CONFIG_PAGE" 2>/dev/null
+            xdg-open "$CONFIG_PAGE" 2>/dev/null || echo -e "  ${YELLOW}Please open in browser: ${CONFIG_PAGE}${NC}"
         fi
         break
     fi

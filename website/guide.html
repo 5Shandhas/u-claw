@@ -41,6 +41,7 @@ pre code{background:none;padding:0}
 .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin:16px 0}
 .tip{border-left:4px solid var(--green);padding:12px 16px;margin:16px 0;background:rgba(74,222,128,.06);border-radius:0 8px 8px 0}
 .warn{border-left:4px solid var(--yellow);padding:12px 16px;margin:16px 0;background:rgba(250,204,21,.06);border-radius:0 8px 8px 0}
+.danger{border-left:4px solid var(--red);padding:12px 16px;margin:16px 0;background:rgba(248,113,113,.06);border-radius:0 8px 8px 0}
 table{width:100%;border-collapse:collapse;margin:16px 0}
 th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
 th{color:var(--cyan);font-weight:600}
@@ -102,6 +103,8 @@ ul{padding-left:20px}
         <a class="nav-item" href="#" data-page="mirrors">国内镜像源</a>
         <a class="nav-item" href="#" data-page="onboard">首次配置向导</a>
         <a class="nav-item" href="#" data-page="dashboard">网页控制台</a>
+        <a class="nav-item" href="#" data-page="linux-usb">Linux 启动盘模式</a>
+        <a class="nav-item" href="#" data-page="china-install">中国区原生安装教程</a>
       </div>
     </div>
 
@@ -143,6 +146,7 @@ ul{padding-left:20px}
         <a class="nav-item" href="#" data-page="commands">命令速查</a>
         <a class="nav-item" href="#" data-page="env-vars">环境变量</a>
         <a class="nav-item" href="#" data-page="doctor">诊断修复</a>
+        <a class="nav-item" href="#" data-page="maintain">维护与卸载</a>
       </div>
     </div>
 
@@ -191,7 +195,8 @@ ul{padding-left:20px}
 <div class="step"><div class="step-num">2</div><div class="step-content"><strong>双击启动脚本</strong>
 <table><tr><th>系统</th><th>双击打开</th></tr>
 <tr><td>macOS</td><td><code>Mac-Start.command</code></td></tr>
-<tr><td>Windows</td><td><code>Windows-Start.bat</code></td></tr></table>
+<tr><td>Windows</td><td><code>Windows-Start.bat</code></td></tr>
+<tr><td>Linux</td><td><code>bash Linux-Start.sh</code></td></tr></table>
 </div></div>
 <div class="step"><div class="step-num">3</div><div class="step-content"><strong>首次配置</strong><p style="color:var(--dim)">浏览器自动打开 Config.html → 选择 AI 模型 → 填写 API Key</p></div></div>
 <div class="step"><div class="step-num">4</div><div class="step-content"><strong>开始使用</strong><p style="color:var(--dim)">控制台自动打开 <code>http://127.0.0.1:18789</code></p></div></div>
@@ -217,6 +222,7 @@ cd u-claw/u-claw-app && bash setup.sh</code></pre>
 <pre><code># 便携版
 bash Mac-Start.command   # Mac
 Windows-Start.bat        # Windows
+bash Linux-Start.sh      # Linux
 
 # 桌面版
 npm run dev</code></pre>
@@ -236,6 +242,9 @@ npm run dev</code></pre>
 <tr><td><code>Mac-Menu.command</code></td><td>macOS 功能菜单（8 项：配置、QQ、备份等）</td></tr>
 <tr><td><code>Windows-Start.bat</code></td><td>Windows 一键启动</td></tr>
 <tr><td><code>Windows-Menu.bat</code></td><td>Windows 功能菜单</td></tr>
+<tr><td><code>Linux-Start.sh</code></td><td>Linux 一键启动（<code>bash Linux-Start.sh</code>）</td></tr>
+<tr><td><code>Linux-Menu.sh</code></td><td>Linux 功能菜单（8 项：配置、QQ、备份等）</td></tr>
+<tr><td><code>Linux-Install.sh</code></td><td>安装到 Linux 电脑</td></tr>
 <tr><td><code>Config.html</code></td><td>首次配置页面（选模型、填 API Key）</td></tr>
 <tr><td><code>U-Claw.html</code></td><td>导航首页</td></tr>
 <tr><td><code>setup.sh</code></td><td>开发者搭建脚本（自动下载运行时）</td></tr>
@@ -247,14 +256,15 @@ npm run dev</code></pre>
 │   ├── core/                  OpenClaw + 依赖 + QQ 插件
 │   └── runtime/
 │       ├── node-mac-arm64/    Mac Apple Silicon
-│       └── node-win-x64/     Windows 64-bit
+│       ├── node-win-x64/     Windows 64-bit
+│       └── node-linux-x64/   Linux x86_64
 ├── data/                   ← 用户数据（配置、记忆、备份）
 │   ├── .openclaw/             openclaw.json 配置文件
 │   ├── memory/                AI 记忆
 │   └── backups/               备份
 └── [启动脚本和HTML页面]</code></pre>
 
-<div class="warn"><strong>注意：</strong>目前支持 Mac Apple Silicon (M1-M4)。Windows 版开发中，Mac Intel 暂不支持。</div>
+<div class="warn"><strong>注意：</strong>目前支持 Mac Apple Silicon (M1-M4) 和 Linux x86_64。Windows 版开发中，Mac Intel 暂不支持。</div>
 </div>
 
 <!-- ===== 安装到电脑 ===== -->
@@ -296,6 +306,15 @@ npm run build:win        # Windows → release/U-Claw-x.x.x.exe（需在 Windows
 <tr><td>体验</td><td>终端 + 浏览器</td><td>原生 App 窗口</td></tr>
 <tr><td>适合</td><td>临时电脑、公共电脑</td><td>个人电脑长期使用</td></tr>
 </table>
+
+<h2>方法三：从 U 盘安装到 Linux</h2>
+<div class="step"><div class="step-num">1</div><div class="step-content">插入 U-Claw U 盘，打开终端</div></div>
+<div class="step"><div class="step-num">2</div><div class="step-content">运行安装脚本：
+<pre><code>cd /media/$USER/你的U盘/U-Claw
+bash Linux-Install.sh</code></pre>
+<p style="color:var(--dim)">安装到 <code>~/.uclaw/</code>，优先使用 U 盘离线资源，缺失时从国内镜像下载</p>
+</div></div>
+<div class="step"><div class="step-num">3</div><div class="step-content">启动：终端运行 <code>bash ~/.uclaw/start.sh</code> 或在应用菜单搜索 U-Claw</div></div>
 
 <div class="warn"><strong>安全提醒：</strong>共享电脑、公司电脑建议用 U 盘便携模式，不要安装到电脑。</div>
 </div>
@@ -728,6 +747,166 @@ openclaw logs</code></pre>
 </ul>
 </div>
 
+<!-- ===== 维护与卸载 ===== -->
+<div class="page" id="page-maintain">
+<h1>维护与卸载</h1>
+<p>U-Claw 的菜单脚本（Mac-Menu / Linux-Menu / Windows-Menu）内置了完整的维护功能，选择对应编号即可操作。</p>
+
+<div class="tip"><strong>启动方式：</strong>双击 <code>Mac-Menu.command</code>（macOS）、<code>Linux-Menu.sh</code>（Linux）或 <code>Windows-Menu.bat</code>（Windows），在菜单中选择 9-15 进入维护功能。</div>
+
+<h2>[9] 杀死残留进程</h2>
+<div class="card">
+<h3>什么时候需要？</h3>
+<ul>
+<li>关了浏览器窗口但后台进程还在跑</li>
+<li>端口 18789 被占用，新实例启动失败</li>
+<li>想彻底停止 U-Claw 的所有进程</li>
+</ul>
+<h3>操作方式</h3>
+<p>在菜单中选择 <strong>9</strong>，脚本会自动查找并终止所有 OpenClaw 相关进程（node、gateway 等），然后释放端口。</p>
+<div class="tip"><strong>提示：</strong>如果显示"没有找到残留进程"说明后台已经是干净的。</div>
+</div>
+
+<h2>[10] 查看日志</h2>
+<div class="card">
+<h3>三个子功能</h3>
+<ul>
+<li><strong>查看最近日志</strong> — 显示最近 50 行网关日志</li>
+<li><strong>实时跟踪日志</strong> — 实时输出日志（按 Ctrl+C 退出）</li>
+<li><strong>清空日志</strong> — 清除历史日志释放空间</li>
+</ul>
+<h3>日志文件位置</h3>
+<pre><code>data/logs/gateway.log</code></pre>
+<p>每次启动（通过 Start 脚本）都会自动将网关输出捕获到此文件，方便排查问题。</p>
+</div>
+
+<h2>[11] 恢复出厂设置</h2>
+<div class="card">
+<h3>什么时候需要？</h3>
+<ul>
+<li>配置搞乱了想重来</li>
+<li>模型设置出错导致无法启动</li>
+<li>想清除所有个人数据重新开始</li>
+</ul>
+<h3>会做什么？</h3>
+<ol>
+<li>自动备份当前配置到 <code>data/backups/</code></li>
+<li>删除配置文件（<code>openclaw.json</code>）</li>
+<li>删除记忆和对话历史</li>
+<li>恢复为初始默认状态</li>
+</ol>
+<div class="danger"><strong>⚠️ 需要输入 RESET 确认！</strong>此操作会清除你的 API Key 配置和对话记录。虽然会自动备份，但请确认你真的需要重置。</div>
+</div>
+
+<h2>[12] 完整卸载指南</h2>
+<div class="tip"><strong>卸载前请先备份：</strong>如果你有重要的对话记录或配置，先手动复制 <code>data/</code> 目录到安全位置。</div>
+
+<div class="card">
+<h3>U 盘便携版卸载</h3>
+<div class="step"><div class="step-num">1</div><div class="step-content"><strong>关闭所有 U-Claw 窗口</strong><p style="color:var(--dim)">确保浏览器中没有打开的 U-Claw 页面</p></div></div>
+<div class="step"><div class="step-num">2</div><div class="step-content"><strong>杀死残留进程</strong><p style="color:var(--dim)">运行菜单选项 9，或关闭终端窗口</p></div></div>
+<div class="step"><div class="step-num">3</div><div class="step-content"><strong>安全弹出 U 盘</strong><p style="color:var(--dim)">右键 U 盘 → 弹出（不要直接拔！）</p></div></div>
+<div class="step"><div class="step-num">4</div><div class="step-content"><strong>完毕</strong><p style="color:var(--dim)">所有数据都在 U 盘上，电脑无任何残留</p></div></div>
+<div class="warn"><strong>注意：</strong>如果曾经用 <code>Mac-Install.command</code> 安装到电脑，还需要手动删除 <code>~/.uclaw/</code> 目录。</div>
+</div>
+
+<div class="card">
+<h3>桌面安装版（Electron）卸载</h3>
+<p><strong>macOS：</strong></p>
+<ol>
+<li>将 <code>U-Claw.app</code> 从「应用程序」拖到废纸篓</li>
+<li>删除用户数据：</li>
+</ol>
+<pre><code>rm -rf ~/Library/Application\ Support/U-Claw/</code></pre>
+
+<p><strong>Windows：</strong></p>
+<ol>
+<li>设置 → 应用 → 找到 U-Claw → 卸载</li>
+<li>删除用户数据：</li>
+</ol>
+<pre><code>rd /s /q "%APPDATA%\U-Claw"</code></pre>
+
+<p><strong>Linux：</strong></p>
+<ol>
+<li>删除 <code>.desktop</code> 文件和应用目录</li>
+<li>删除用户数据：</li>
+</ol>
+<pre><code>rm -rf ~/.config/U-Claw/</code></pre>
+</div>
+
+<div class="card">
+<h3>原生安装版（npm 全局安装）卸载</h3>
+<pre><code># 卸载 OpenClaw
+npm uninstall -g openclaw
+
+# 删除配置和数据
+rm -rf ~/.openclaw/</code></pre>
+</div>
+
+<div class="card">
+<h3>残留清理检查清单</h3>
+<p>卸载后如果想确认电脑上完全没有 U-Claw 的痕迹，检查以下目录是否还存在：</p>
+<table>
+<tr><th>路径</th><th>说明</th><th>系统</th></tr>
+<tr><td><code>~/.uclaw/</code></td><td>从 U 盘安装到电脑的版本</td><td>macOS / Linux</td></tr>
+<tr><td><code>~/.openclaw/</code></td><td>npm 全局安装的配置</td><td>所有系统</td></tr>
+<tr><td><code>~/Library/Application Support/U-Claw/</code></td><td>Electron 桌面版数据</td><td>macOS</td></tr>
+<tr><td><code>%APPDATA%\U-Claw\</code></td><td>Electron 桌面版数据</td><td>Windows</td></tr>
+<tr><td><code>~/.config/U-Claw/</code></td><td>Electron 桌面版数据</td><td>Linux</td></tr>
+</table>
+<div class="danger"><strong>⚠️ 删除这些目录后，所有配置和对话记录将永久丢失，无法恢复。</strong></div>
+</div>
+
+<h2>[13] 检查更新</h2>
+<div class="card">
+<p>在菜单中选择 <strong>13</strong>，脚本会自动检查当前 OpenClaw 版本并与最新版对比。如果有新版本可用，会提示你是否立即更新。</p>
+<h3>手动更新（备用）</h3>
+<pre><code># U 盘便携版
+cd app/core && npm update openclaw
+
+# npm 全局安装版
+npm update -g openclaw
+
+# 查看当前版本
+openclaw --version</code></pre>
+</div>
+
+<h2>[14] 清理空间</h2>
+<div class="card">
+<p>在菜单中选择 <strong>14</strong>，脚本会扫描并清理以下内容：</p>
+<ul>
+<li>npm 缓存</li>
+<li>临时文件</li>
+<li>旧版本备份</li>
+<li>日志文件</li>
+</ul>
+<h3>手动清理路径</h3>
+<pre><code># npm 缓存
+npm cache clean --force
+
+# 日志
+rm -f data/logs/gateway.log
+
+# 备份
+rm -rf data/backups/</code></pre>
+</div>
+
+<h2>[15] 插件管理</h2>
+<div class="card">
+<p>在菜单中选择 <strong>15</strong>，可以查看已安装的插件、安装新插件或卸载不需要的插件。</p>
+<h3>命令行备用</h3>
+<pre><code># 查看已安装插件
+openclaw plugin list
+
+# 安装插件
+openclaw plugin install &lt;插件名&gt;
+
+# 卸载插件
+openclaw plugin uninstall &lt;插件名&gt;</code></pre>
+<div class="tip"><strong>推荐插件：</strong>QQ 渠道插件（<code>@nicepkg/openclaw-plugin-qq</code>）是国内用户最常用的插件。</div>
+</div>
+</div>
+
 <!-- ===== FAQ ===== -->
 <div class="page" id="page-faq">
 <h1>常见问题</h1>
@@ -741,7 +920,9 @@ openclaw logs</code></pre>
 <h3>Q: Windows 需要 WSL 吗？</h3>
 <p>不需要。自带 Windows 版 Node.js。</p>
 <h3>Q: 怎么更新？</h3>
-<p>U 盘模式：替换 <code>openclaw/</code> 目录。安装模式：<code>openclaw update</code></p>
+<p>最简单的方式：运行菜单脚本（Mac-Menu / Linux-Menu / Windows-Menu）选择 <strong>[13] 检查更新</strong>，自动完成。手动方式：U 盘模式运行 <code>cd app/core && npm update openclaw</code>，安装模式运行 <code>npm update -g openclaw</code>。详见 <a href="#" data-page="maintain">维护与卸载</a> 页面。</p>
+<h3>Q: 怎么完整卸载？</h3>
+<p>根据你的安装方式不同，卸载步骤也不同。U 盘便携版只需弹出 U 盘即可；桌面版和 npm 版需要额外删除配置目录。详见 <a href="#" data-page="maintain">维护与卸载</a> 页面的完整卸载指南。</p>
 <h3>Q: 配置文件在哪？</h3>
 <p>U 盘：<code>portable-home/.openclaw/openclaw.json</code><br>安装：<code>~/.openclaw/openclaw.json</code></p>
 <h3>Q: 和原版 OpenClaw 的区别？</h3>
@@ -777,6 +958,320 @@ openclaw logs</code></pre>
 </div>
 
 <div class="tip" style="margin-top:24px"><strong>开源贡献：</strong>欢迎提交 PR！特别需要：修复脚本、教程文档、聊天平台桥接、实用技能。<br>Fork → Branch → Commit → PR，详见 <a href="https://github.com/dongsheng123132/u-claw" target="_blank">GitHub 仓库</a></div>
+</div>
+
+<!-- ===== Linux 启动盘模式 ===== -->
+<div class="page" id="page-linux-usb">
+<h1>Linux 启动盘模式</h1>
+<p>把整个 Linux 系统 + OpenClaw 刻到 U 盘，开机从 USB 启动直接进入 Linux 桌面 + AI 助手。</p>
+
+<div class="card">
+<h3>启动盘模式 vs 普通便携模式</h3>
+<table>
+<tr><th></th><th>普通便携模式</th><th>Linux 启动盘模式</th></tr>
+<tr><td>原理</td><td>在已有系统上运行 U 盘里的脚本</td><td>直接从 U 盘启动整个 Linux 系统</td></tr>
+<tr><td>依赖</td><td>需要电脑已有 macOS / Windows / Linux</td><td>不依赖任何已安装系统</td></tr>
+<tr><td>适用</td><td>有系统的电脑，临时用</td><td>无系统 / 不想碰原系统 / 专用 AI 工作站</td></tr>
+<tr><td>U 盘大小</td><td>4GB+</td><td>64GB+ 推荐（系统 + 持久化 + OpenClaw）</td></tr>
+<tr><td>速度</td><td>取决于 U 盘读写</td><td>必须 USB 3.0+（USB 2.0 会很卡）</td></tr>
+</table>
+</div>
+
+<h2>准备材料</h2>
+<table>
+<tr><th>材料</th><th>要求</th><th>说明</th></tr>
+<tr><td>U 盘</td><td><strong>64GB+ USB 3.0</strong></td><td>最低 32GB，推荐 64GB USB 3.0+（USB 2.0 太慢不推荐）</td></tr>
+<tr><td>Linux Mint ISO</td><td>Cinnamon 版</td><td>下载: <a href="https://mirrors.tuna.tsinghua.edu.cn/linuxmint-cd/stable/" target="_blank">清华镜像</a> 或 <a href="https://mirrors.ustc.edu.cn/linuxmint-cd/stable/" target="_blank">中科大镜像</a></td></tr>
+<tr><td>Rufus</td><td>v4.0+</td><td>下载: <a href="https://rufus.ie/zh/" target="_blank">rufus.ie</a>（仅 Windows 制作启动盘用）</td></tr>
+</table>
+<div class="tip"><strong>为什么选 Linux Mint？</strong>界面最接近 Windows，中文支持好，硬件兼容性强，适合新手。</div>
+
+<h2>制作启动盘步骤</h2>
+
+<div class="step"><div class="step-num">1</div><div class="step-content"><strong>打开 Rufus</strong>
+<p style="color:var(--dim)">插入 U 盘，打开 Rufus，选择你的 U 盘设备</p>
+</div></div>
+
+<div class="step"><div class="step-num">2</div><div class="step-content"><strong>选择 ISO 镜像</strong>
+<p style="color:var(--dim)">点击"选择"，找到下载的 Linux Mint ISO 文件</p>
+</div></div>
+
+<div class="step"><div class="step-num">3</div><div class="step-content"><strong>关键设置</strong>
+<table>
+<tr><th>选项</th><th>设置</th></tr>
+<tr><td>分区类型</td><td><strong>GPT</strong>（新电脑）或 MBR（老电脑）</td></tr>
+<tr><td>目标系统</td><td><strong>UEFI</strong>（新电脑）或 BIOS（老电脑）</td></tr>
+<tr><td>Persistent Partition Size</td><td><strong>8-16 GB</strong>（重要！这是持久化存储空间）</td></tr>
+</table>
+<div class="warn"><strong>Persistent Storage 必须开启！</strong>否则重启后所有安装和配置都会丢失。Rufus 4.0+ 支持此功能。</div>
+</div></div>
+
+<div class="step"><div class="step-num">4</div><div class="step-content"><strong>开始制作</strong>
+<p style="color:var(--dim)">点击"开始"，等待完成（约 5-10 分钟）</p>
+</div></div>
+
+<h2>BIOS/UEFI 设置 USB 启动</h2>
+
+<div class="step"><div class="step-num">1</div><div class="step-content"><strong>插入 U 盘，重启电脑</strong></div></div>
+
+<div class="step"><div class="step-num">2</div><div class="step-content"><strong>进入 BIOS 启动菜单</strong>
+<p style="color:var(--dim)">开机时连续按启动键（不同品牌不同）：</p>
+<table>
+<tr><th>品牌</th><th>启动菜单键</th><th>BIOS 设置键</th></tr>
+<tr><td>联想 Lenovo</td><td><code>F12</code></td><td><code>F2</code></td></tr>
+<tr><td>戴尔 Dell</td><td><code>F12</code></td><td><code>F2</code></td></tr>
+<tr><td>惠普 HP</td><td><code>F9</code></td><td><code>F10</code></td></tr>
+<tr><td>华硕 ASUS</td><td><code>F8</code></td><td><code>F2 / Del</code></td></tr>
+<tr><td>宏碁 Acer</td><td><code>F12</code></td><td><code>F2</code></td></tr>
+<tr><td>小米</td><td><code>F12</code></td><td><code>F2</code></td></tr>
+<tr><td>华为</td><td><code>F12</code></td><td><code>F2</code></td></tr>
+<tr><td>自组装</td><td><code>F11 / F12</code></td><td><code>Del</code></td></tr>
+</table>
+</div></div>
+
+<div class="step"><div class="step-num">3</div><div class="step-content"><strong>选择 USB 设备启动</strong>
+<p style="color:var(--dim)">在启动菜单中选择你的 U 盘（通常显示为 USB 或 U 盘品牌名）</p>
+</div></div>
+
+<div class="warn"><strong>Secure Boot 问题：</strong>如果无法从 USB 启动，进入 BIOS 设置关闭 Secure Boot。路径通常是 Security → Secure Boot → Disabled。</div>
+
+<h2>首次启动 Linux Mint</h2>
+
+<div class="step"><div class="step-num">1</div><div class="step-content"><strong>选择 "Start Linux Mint"</strong>
+<p style="color:var(--dim)">启动菜单中选择第一项，等待进入桌面（约 1-2 分钟）</p>
+</div></div>
+
+<div class="step"><div class="step-num">2</div><div class="step-content"><strong>连接网络</strong>
+<p style="color:var(--dim)">点击右下角网络图标，连接 WiFi 或插入网线</p>
+</div></div>
+
+<div class="step"><div class="step-num">3</div><div class="step-content"><strong>设置中文（可选）</strong>
+<pre><code># 打开终端 (Ctrl+Alt+T)
+sudo apt update
+sudo apt install -y language-pack-zh-hans fonts-wqy-microhei</code></pre>
+</div></div>
+
+<h2>安装 OpenClaw</h2>
+
+<div class="step"><div class="step-num">1</div><div class="step-content"><strong>下载安装脚本</strong>
+<pre><code># 打开终端 (Ctrl+Alt+T)
+curl -O https://raw.githubusercontent.com/dongsheng123132/u-claw/main/portable/setup-linux-usb.sh
+bash setup-linux-usb.sh</code></pre>
+<p style="color:var(--dim)">脚本自动下载 Node.js + OpenClaw + QQ 插件，全部使用国内镜像</p>
+</div></div>
+
+<div class="step"><div class="step-num">2</div><div class="step-content"><strong>或手动安装</strong>
+<pre><code># 1. 安装 Node.js
+curl -# -L https://npmmirror.com/mirrors/node/v22.14.0/node-v22.14.0-linux-x64.tar.gz -o /tmp/node.tar.gz
+mkdir -p ~/node && tar -xzf /tmp/node.tar.gz -C ~/node --strip-components=1
+export PATH="$HOME/node/bin:$PATH"
+
+# 2. 安装 OpenClaw
+mkdir -p ~/openclaw && cd ~/openclaw
+npm init -y
+npm install openclaw@latest --registry=https://registry.npmmirror.com
+
+# 3. 启动
+node node_modules/openclaw/openclaw.mjs gateway run --port 18789</code></pre>
+</div></div>
+
+<h2>日常使用</h2>
+<ul>
+<li>开机选择 USB 启动 → 自动进入 Linux Mint 桌面</li>
+<li>双击桌面的 <strong>U-Claw AI 助手</strong> 图标启动</li>
+<li>浏览器自动打开控制台，开始使用</li>
+<li>关机前正常关闭 Linux（不要直接拔 U 盘）</li>
+</ul>
+
+<h2>常见问题</h2>
+
+<h3>USB 启动不了</h3>
+<ul>
+<li>检查 BIOS 启动顺序，确保 USB 排在硬盘前面</li>
+<li>关闭 Secure Boot</li>
+<li>GPT/MBR 选择要匹配电脑的 UEFI/Legacy 模式</li>
+<li>换一个 USB 口试试（优先 USB 3.0 口）</li>
+</ul>
+
+<h3>持久化不生效（重启后配置丢失）</h3>
+<ul>
+<li>确认 Rufus 制作时设置了 Persistent Partition Size（8-16 GB）</li>
+<li>Rufus 版本需要 4.0 以上才支持持久化</li>
+<li>部分电脑 UEFI 模式下持久化可能有问题，尝试用 MBR + BIOS 模式</li>
+</ul>
+
+<h3>运行很慢</h3>
+<ul>
+<li>使用 USB 3.0 或更快的 U 盘</li>
+<li>避免使用太便宜的 U 盘（随机读写速度太低）</li>
+<li>推荐品牌：三星 BAR Plus、闪迪 CZ880</li>
+</ul>
+</div>
+
+<!-- ===== 中国区原生安装教程 ===== -->
+<div class="page" id="page-china-install">
+<h1>中国区原生安装教程</h1>
+<p>不用 U 盘，直接在中国网络环境下从零安装 OpenClaw。全程使用国内镜像，无需翻墙。</p>
+
+<div class="card">
+<p><strong>适用场景：</strong>你已经有一台能联网的电脑（Mac / Windows / Linux），想直接安装 OpenClaw，不需要 U 盘。</p>
+</div>
+
+<h2>第一步：安装 Node.js</h2>
+<p>OpenClaw 需要 Node.js v22 或以上版本。</p>
+
+<h3>方法 A：官网直接下载（最简单）</h3>
+<ul>
+<li><strong>Node.js 中文网：</strong><a href="https://nodejs.cn/download/" target="_blank">nodejs.cn/download</a>（国内直连，速度快）</li>
+<li>下载 <code>.pkg</code>（Mac）或 <code>.msi</code>（Windows）安装包，双击安装</li>
+</ul>
+
+<h3>方法 B：使用 nvm 版本管理器（推荐开发者）</h3>
+<pre><code># 1. 安装 nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+
+# 2. 设置 Node.js 国内镜像（关键！否则下载很慢）
+export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node
+echo 'export NVM_NODEJS_ORG_MIRROR=https://npmmirror.com/mirrors/node' >> ~/.zshrc
+
+# 3. 安装 Node.js 22
+nvm install 22
+nvm use 22
+
+# 4. 验证
+node -v   # 应显示 v22.x.x</code></pre>
+
+<h3>方法 C：使用 fnm（更快的版本管理器，基于 Rust）</h3>
+<pre><code># Mac/Linux:
+curl -fsSL https://fnm.vercel.app/install | bash
+
+# Windows (PowerShell):
+winget install Schniz.fnm
+
+# 设置国内镜像
+export FNM_NODE_DIST_MIRROR=https://npmmirror.com/mirrors/node
+echo 'export FNM_NODE_DIST_MIRROR=https://npmmirror.com/mirrors/node' >> ~/.zshrc
+
+# 安装 Node.js 22
+fnm install 22 && fnm use 22</code></pre>
+
+<h2>第二步：设置 npm 国内镜像</h2>
+<p>安装完 Node.js 后，<strong>必须先换镜像源</strong>，否则安装 OpenClaw 会超时。</p>
+
+<pre><code># 推荐：淘宝 npmmirror（最稳定，速度最快）
+npm config set registry https://registry.npmmirror.com
+
+# 验证
+npm config get registry
+# 应返回: https://registry.npmmirror.com/</code></pre>
+
+<h3>国内可用的 npm 镜像源</h3>
+<table>
+<tr><th>镜像源</th><th>地址</th><th>说明</th></tr>
+<tr><td><strong>淘宝 npmmirror</strong></td><td><code>https://registry.npmmirror.com</code></td><td>首选，最快最稳</td></tr>
+<tr><td>腾讯云</td><td><code>https://mirrors.cloud.tencent.com/npm/</code></td><td>腾讯云加速</td></tr>
+<tr><td>华为云</td><td><code>https://mirrors.huaweicloud.com/repository/npm/</code></td><td>华为云加速</td></tr>
+<tr><td>阿里云</td><td><code>https://npm.aliyun.com</code></td><td>阿里云加速</td></tr>
+<tr><td>中科大</td><td><code>https://mirrors.ustc.edu.cn/</code></td><td>高校镜像</td></tr>
+<tr><td>清华大学</td><td><code>https://mirrors.tuna.tsinghua.edu.cn/</code></td><td>高校镜像</td></tr>
+</table>
+
+<div class="warn"><strong>注意：</strong>旧域名 <code>registry.npm.taobao.org</code> 已于 2024 年 1 月停止服务，请使用新域名 <code>registry.npmmirror.com</code>。</div>
+
+<h3>使用 nrm 快速切换镜像</h3>
+<pre><code># 安装 nrm 镜像源管理工具
+npm install -g nrm
+
+nrm ls          # 查看所有可用镜像源
+nrm use taobao  # 一键切换淘宝源
+nrm test        # 测速，看哪个最快</code></pre>
+
+<h2>第三步：安装 OpenClaw</h2>
+<pre><code># 全局安装
+npm install -g openclaw@latest
+
+# 如果超时，手动指定镜像：
+npm install -g openclaw@latest --registry=https://registry.npmmirror.com
+
+# 验证
+openclaw --version</code></pre>
+
+<h2>第四步：配置国产 AI 模型</h2>
+<p>启动配置向导：</p>
+<pre><code># 启动引导向导 + 安装后台守护进程
+openclaw onboard --install-daemon
+
+# 或只启动引导向导
+openclaw onboard</code></pre>
+
+<h3>国产模型注册与配置</h3>
+<table>
+<tr><th>模型</th><th>注册地址</th><th>API Base URL</th><th>推荐场景</th></tr>
+<tr><td><strong>DeepSeek</strong></td><td><a href="https://platform.deepseek.com/" target="_blank">platform.deepseek.com</a></td><td><code>https://api.deepseek.com/v1</code></td><td>编程首选，极便宜</td></tr>
+<tr><td><strong>Kimi</strong></td><td><a href="https://platform.moonshot.cn/" target="_blank">platform.moonshot.cn</a></td><td><code>https://api.moonshot.cn/v1</code></td><td>长文档，256K 上下文</td></tr>
+<tr><td><strong>通义千问</strong></td><td><a href="https://dashscope.console.aliyun.com/" target="_blank">dashscope.console.aliyun.com</a></td><td>配置向导选 Qwen</td><td>免费额度大</td></tr>
+<tr><td><strong>智谱 GLM</strong></td><td><a href="https://open.bigmodel.cn/" target="_blank">open.bigmodel.cn</a></td><td>配置向导选 Zhipu</td><td>学术场景</td></tr>
+<tr><td><strong>豆包</strong></td><td><a href="https://console.volcengine.com/ark" target="_blank">console.volcengine.com/ark</a></td><td>配置向导选 Volcano</td><td>火山引擎生态</td></tr>
+<tr><td><strong>MiniMax</strong></td><td><a href="https://platform.minimaxi.com/" target="_blank">platform.minimaxi.com</a></td><td>配置向导选 MiniMax</td><td>语音多模态</td></tr>
+</table>
+
+<div class="tip"><strong>推荐首选 DeepSeek：</strong>注册即送免费额度，API 无需翻墙，编程能力强，价格约 1 元/百万 tokens。</div>
+
+<h3>配置示例（DeepSeek）</h3>
+<pre><code># 在配置向导中：
+# 1. 选择 Custom Provider
+# 2. 填写：
+#    API Base URL: https://api.deepseek.com/v1
+#    API Key: sk-xxxxxxxx（在 platform.deepseek.com 获取）
+#    Model: deepseek-chat</code></pre>
+
+<h2>第五步：启动与验证</h2>
+<pre><code># 启动网关
+openclaw gateway run
+
+# 查看状态
+openclaw gateway status
+
+# 浏览器打开控制台
+# http://127.0.0.1:18789</code></pre>
+
+<h2>常见问题</h2>
+
+<h3>npm install 超时 / ECONNREFUSED</h3>
+<pre><code># 1. 确认镜像源已切换
+npm config get registry
+# 应该是 https://registry.npmmirror.com/
+
+# 2. 如果还超时，试其他镜像
+npm config set registry https://mirrors.cloud.tencent.com/npm/
+
+# 3. 清除缓存重试
+npm cache clean --force
+npm install -g openclaw@latest</code></pre>
+
+<h3>node: command not found</h3>
+<pre><code># 重新打开终端，或手动加载配置
+source ~/.zshrc   # macOS
+source ~/.bashrc  # Linux</code></pre>
+
+<h3>openclaw onboard 报错</h3>
+<pre><code># 确认 Node.js 版本
+node -v  # 需要 v22+
+
+# 如果版本太低
+nvm install 22 && nvm use 22
+# 或
+fnm install 22 && fnm use 22</code></pre>
+
+<h3>API 调用失败</h3>
+<ul>
+<li>检查 API Key 是否正确（注意不要多余空格）</li>
+<li>检查 API Base URL 是否正确</li>
+<li>确认模型名称正确（如 <code>deepseek-chat</code>）</li>
+<li>国产模型 API 直连，不需要翻墙</li>
+</ul>
+
+<div class="tip"><strong>运行诊断：</strong><code>openclaw doctor --repair</code> 可以自动检测和修复常见问题。</div>
 </div>
 
 </main>

@@ -1,5 +1,5 @@
 ﻿@echo off
-chcp 65001 >/dev/null 2>&1
+chcp 65001 >nul 2>&1
 title U-Claw - Extract and Launch
 
 echo.
@@ -33,7 +33,7 @@ if exist "%INSTALL_DIR%\app\core\node_modules" (
     if "%choice%"=="2" (
         echo.
         echo   Re-extracting...
-        rmdir /s /q "%INSTALL_DIR%" >/dev/null 2>&1
+        rmdir /s /q "%INSTALL_DIR%" >nul 2>&1
     ) else (
         echo.
         echo   Launching...
@@ -47,7 +47,7 @@ echo   Extracting U-Claw to: %INSTALL_DIR%
 echo   This may take a few minutes...
 echo.
 
-where tar >/dev/null 2>&1
+where tar >nul 2>&1
 if %errorlevel%==0 (
     cd /d "%SCRIPT_DIR%"
     tar xzf "%ARCHIVE%"
