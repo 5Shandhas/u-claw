@@ -49,6 +49,11 @@ else
     echo -e "  ${RED}✗${NC} Node.js: NOT FOUND"
 fi
 
+# Migration shim: rename old core-mac to core for existing USB users
+if [ -d "$UCLAW_DIR/app/core-mac" ] && [ ! -d "$UCLAW_DIR/app/core" ]; then
+    mv "$UCLAW_DIR/app/core-mac" "$UCLAW_DIR/app/core"
+fi
+
 # 2. Check core directory
 echo "[2/6] Checking core directory..."
 CORE_DIR="$UCLAW_DIR/app/core"

@@ -4,6 +4,12 @@
 
 UCLAW_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_DIR="$UCLAW_DIR/app"
+
+# Migration shim: rename old core-mac to core for existing USB users
+if [ -d "$APP_DIR/core-mac" ] && [ ! -d "$APP_DIR/core" ]; then
+    mv "$APP_DIR/core-mac" "$APP_DIR/core"
+fi
+
 CORE_DIR="$APP_DIR/core"
 DATA_DIR="$UCLAW_DIR/data"
 STATE_DIR="$DATA_DIR/.openclaw"
