@@ -1092,34 +1092,32 @@ openclaw plugin uninstall &lt;插件名&gt;</code></pre>
 <h2>准备材料</h2>
 <table>
 <tr><th>材料</th><th>要求</th><th>说明</th></tr>
-<tr><td>U 盘</td><td><strong>64GB+ USB 3.0</strong></td><td>最低 32GB，推荐 64GB USB 3.0+（USB 2.0 太慢不推荐）</td></tr>
-<tr><td>Linux Mint ISO</td><td>Cinnamon 版</td><td>下载: <a href="https://mirrors.tuna.tsinghua.edu.cn/linuxmint-cd/stable/" target="_blank">清华镜像</a> 或 <a href="https://mirrors.ustc.edu.cn/linuxmint-cd/stable/" target="_blank">中科大镜像</a></td></tr>
-<tr><td>Rufus</td><td>v4.0+</td><td>下载: <a href="https://rufus.ie/zh/" target="_blank">rufus.ie</a>（仅 Windows 制作启动盘用）</td></tr>
+<tr><td>U 盘</td><td><strong>32GB+ USB 3.0</strong></td><td>推荐 64GB USB 3.0+（USB 2.0 太慢不推荐）</td></tr>
+<tr><td>Ubuntu 24.04.4 ISO</td><td>Desktop 版</td><td>下载: <a href="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/24.04.4/" target="_blank">清华镜像</a> 或 <a href="https://mirrors.aliyun.com/ubuntu-releases/24.04.4/" target="_blank">阿里镜像</a></td></tr>
+<tr><td>Ventoy</td><td>v1.0.99</td><td>下载: <a href="https://github.com/ventoy/Ventoy/releases" target="_blank">GitHub Releases</a>（开源引导管理器）</td></tr>
 </table>
-<div class="tip"><strong>为什么选 Linux Mint？</strong>界面最接近 Windows，中文支持好，硬件兼容性强，适合新手。</div>
+<div class="tip"><strong>为什么选 Ventoy + Ubuntu？</strong>Ventoy 支持 ISO 直接启动，更新系统只需替换 ISO 文件；Ubuntu 24.04 LTS 驱动兼容性最好，社区最大。</div>
 
 <h2>制作启动盘步骤</h2>
 
-<div class="step"><div class="step-num">1</div><div class="step-content"><strong>打开 Rufus</strong>
-<p style="color:var(--dim)">插入 U 盘，打开 Rufus，选择你的 U 盘设备</p>
+<div class="step"><div class="step-num">1</div><div class="step-content"><strong>用 Ventoy 写入 U 盘</strong>
+<p style="color:var(--dim)">打开 Ventoy2Disk.exe，选择 U 盘，点 Install。<strong>注意：会格式化 U 盘，数据全丢！</strong></p>
 </div></div>
 
-<div class="step"><div class="step-num">2</div><div class="step-content"><strong>选择 ISO 镜像</strong>
-<p style="color:var(--dim)">点击"选择"，找到下载的 Linux Mint ISO 文件</p>
-</div></div>
-
-<div class="step"><div class="step-num">3</div><div class="step-content"><strong>关键设置</strong>
+<div class="step"><div class="step-num">2</div><div class="step-content"><strong>拷贝文件到 U 盘</strong>
+<p style="color:var(--dim)">将以下文件拷贝到 Ventoy 数据分区（U 盘可见分区）根目录：</p>
 <table>
-<tr><th>选项</th><th>设置</th></tr>
-<tr><td>分区类型</td><td><strong>GPT</strong>（新电脑）或 MBR（老电脑）</td></tr>
-<tr><td>目标系统</td><td><strong>UEFI</strong>（新电脑）或 BIOS（老电脑）</td></tr>
-<tr><td>Persistent Partition Size</td><td><strong>8-16 GB</strong>（重要！这是持久化存储空间）</td></tr>
+<tr><th>文件</th><th>说明</th></tr>
+<tr><td><code>ubuntu-24.04.4-desktop-amd64.iso</code></td><td>Ubuntu 系统镜像（~5.8GB）</td></tr>
+<tr><td><code>persistence.dat</code></td><td>持久化存储镜像（20GB，需 ext4 格式化）</td></tr>
+<tr><td><code>ventoy/ventoy.json</code></td><td>Ventoy 配置（自动加载持久化）</td></tr>
+<tr><td><code>u-claw-linux/</code></td><td>安装脚本目录</td></tr>
 </table>
-<div class="warn"><strong>Persistent Storage 必须开启！</strong>否则重启后所有安装和配置都会丢失。Rufus 4.0+ 支持此功能。</div>
+<div class="tip"><strong>自动化制作：</strong>也可以在 Windows PowerShell 中运行 <code>bootable/</code> 目录下的 4 个脚本，自动完成下载和拷贝。</div>
 </div></div>
 
-<div class="step"><div class="step-num">4</div><div class="step-content"><strong>开始制作</strong>
-<p style="color:var(--dim)">点击"开始"，等待完成（约 5-10 分钟）</p>
+<div class="step"><div class="step-num">3</div><div class="step-content"><strong>启动测试</strong>
+<p style="color:var(--dim)">插入 U 盘，重启电脑，按启动键选择 USB → Ventoy 菜单出现 → 选择 Ubuntu → 进入桌面</p>
 </div></div>
 
 <h2>BIOS/UEFI 设置 USB 启动</h2>
@@ -1147,52 +1145,36 @@ openclaw plugin uninstall &lt;插件名&gt;</code></pre>
 
 <div class="warn"><strong>Secure Boot 问题：</strong>如果无法从 USB 启动，进入 BIOS 设置关闭 Secure Boot。路径通常是 Security → Secure Boot → Disabled。</div>
 
-<h2>首次启动 Linux Mint</h2>
+<h2>首次启动 Ubuntu</h2>
 
-<div class="step"><div class="step-num">1</div><div class="step-content"><strong>选择 "Start Linux Mint"</strong>
-<p style="color:var(--dim)">启动菜单中选择第一项，等待进入桌面（约 1-2 分钟）</p>
+<div class="step"><div class="step-num">1</div><div class="step-content"><strong>Ventoy 菜单选择 Ubuntu</strong>
+<p style="color:var(--dim)">从 USB 启动后进入 Ventoy 菜单，选择 Ubuntu ISO，等待进入桌面（约 1-3 分钟）</p>
 </div></div>
 
-<div class="step"><div class="step-num">2</div><div class="step-content"><strong>连接网络</strong>
-<p style="color:var(--dim)">点击右下角网络图标，连接 WiFi 或插入网线</p>
-</div></div>
-
-<div class="step"><div class="step-num">3</div><div class="step-content"><strong>设置中文（可选）</strong>
+<div class="step"><div class="step-num">2</div><div class="step-content"><strong>格式化持久化镜像（仅首次）</strong>
+<p style="color:var(--dim)">如果持久化镜像尚未格式化（Windows 无 WSL 的情况），打开终端运行：</p>
 <pre><code># 打开终端 (Ctrl+Alt+T)
-sudo apt update
-sudo apt install -y language-pack-zh-hans fonts-wqy-microhei</code></pre>
+sudo bash /media/*/Ventoy/u-claw-linux/format-persistence.sh</code></pre>
+<p style="color:var(--dim)">格式化完成后<strong>必须重启</strong>，持久化才能生效</p>
 </div></div>
 
-<h2>安装 OpenClaw</h2>
-
-<div class="step"><div class="step-num">1</div><div class="step-content"><strong>下载安装脚本</strong>
-<pre><code># 打开终端 (Ctrl+Alt+T)
-curl -O https://raw.githubusercontent.com/dongsheng123132/u-claw/main/portable/setup-linux-usb.sh
-bash setup-linux-usb.sh</code></pre>
-<p style="color:var(--dim)">脚本自动下载 Node.js + OpenClaw + QQ 插件，全部使用国内镜像</p>
+<div class="step"><div class="step-num">3</div><div class="step-content"><strong>连接网络 + 安装 OpenClaw</strong>
+<p style="color:var(--dim)">连接 WiFi，然后运行安装脚本：</p>
+<pre><code>sudo bash /media/*/Ventoy/u-claw-linux/setup-openclaw.sh</code></pre>
+<p style="color:var(--dim)">脚本自动下载 Node.js + OpenClaw + QQ 插件，全部使用国内镜像，约 1-2 分钟</p>
 </div></div>
 
-<div class="step"><div class="step-num">2</div><div class="step-content"><strong>或手动安装</strong>
-<pre><code># 1. 安装 Node.js
-curl -# -L https://npmmirror.com/mirrors/node/v22.14.0/node-v22.14.0-linux-x64.tar.gz -o /tmp/node.tar.gz
-mkdir -p ~/node && tar -xzf /tmp/node.tar.gz -C ~/node --strip-components=1
-export PATH="$HOME/node/bin:$PATH"
-
-# 2. 安装 OpenClaw
-mkdir -p ~/openclaw && cd ~/openclaw
-npm init -y
-npm install openclaw@latest --registry=https://registry.npmmirror.com
-
-# 3. 启动
-node node_modules/openclaw/openclaw.mjs gateway run --port 18789</code></pre>
+<div class="step"><div class="step-num">4</div><div class="step-content"><strong>启动 AI 助手</strong>
+<p style="color:var(--dim)">桌面出现 <strong>"U-Claw AI Assistant"</strong> 图标，双击即可使用</p>
 </div></div>
 
 <h2>日常使用</h2>
 <ul>
-<li>开机选择 USB 启动 → 自动进入 Linux Mint 桌面</li>
-<li>双击桌面的 <strong>U-Claw AI 助手</strong> 图标启动</li>
+<li>插入 U 盘 → 开机选 USB 启动 → Ventoy 菜单选 Ubuntu → 自动进入桌面</li>
+<li>双击桌面的 <strong>U-Claw AI Assistant</strong> 图标启动</li>
 <li>浏览器自动打开控制台，开始使用</li>
-<li>关机前正常关闭 Linux（不要直接拔 U 盘）</li>
+<li>所有数据保存在持久化镜像中，重启不丢</li>
+<li>关机前正常关闭 Ubuntu（不要直接拔 U 盘）</li>
 </ul>
 
 <h2>常见问题</h2>
@@ -1200,23 +1182,23 @@ node node_modules/openclaw/openclaw.mjs gateway run --port 18789</code></pre>
 <h3>USB 启动不了</h3>
 <ul>
 <li>检查 BIOS 启动顺序，确保 USB 排在硬盘前面</li>
-<li>关闭 Secure Boot</li>
-<li>GPT/MBR 选择要匹配电脑的 UEFI/Legacy 模式</li>
-<li>换一个 USB 口试试（优先 USB 3.0 口）</li>
+<li>关闭 Secure Boot（BIOS → Security → Secure Boot → Disabled）</li>
+<li>换一个 USB 口试试（优先 USB 3.0 蓝色口）</li>
+<li>Legacy/CSM 和 UEFI 模式都试试</li>
 </ul>
 
 <h3>持久化不生效（重启后配置丢失）</h3>
 <ul>
-<li>确认 Rufus 制作时设置了 Persistent Partition Size（8-16 GB）</li>
-<li>Rufus 版本需要 4.0 以上才支持持久化</li>
-<li>部分电脑 UEFI 模式下持久化可能有问题，尝试用 MBR + BIOS 模式</li>
+<li>确认 persistence.dat 已格式化为 ext4（运行 <code>format-persistence.sh</code>）</li>
+<li>确认 ventoy/ventoy.json 配置正确（image 路径与 ISO 文件名匹配）</li>
+<li>格式化后必须重启才能生效</li>
 </ul>
 
 <h3>运行很慢</h3>
 <ul>
-<li>使用 USB 3.0 或更快的 U 盘</li>
-<li>避免使用太便宜的 U 盘（随机读写速度太低）</li>
-<li>推荐品牌：三星 BAR Plus、闪迪 CZ880</li>
+<li>使用 USB 3.0 或更快的 U 盘 + USB 3.0 接口</li>
+<li>首次加载约 1-3 分钟属正常</li>
+<li>推荐品牌：三星 BAR Plus、闪迪 CZ880、金士顿</li>
 </ul>
 </div>
 

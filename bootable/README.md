@@ -35,7 +35,7 @@
 │    - 开源引导管理器 v1.0.99                  │
 │                                            │
 │  Ventoy 数据分区（可见）                     │
-│    ubuntu-24.04.2-desktop-amd64.iso  5.8GB │
+│    ubuntu-24.04.4-desktop-amd64.iso  5.8GB │
 │    persistence.dat                   20GB  │
 │    ventoy/ventoy.json                配置   │
 │    u-claw-linux/                     脚本   │
@@ -93,7 +93,7 @@ cd path\to\u-claw\bootable
 
 ### Step 2: 下载 Ubuntu ISO (`2-download-iso.ps1`)
 
-- 从国内镜像下载 Ubuntu 24.04.2 桌面版（~5.8GB）
+- 从国内镜像下载 Ubuntu 24.04.4 桌面版（~5.8GB）
 - 镜像优先级：清华 → 阿里 → 中科大 → 官方
 - SHA256 校验确保文件完整
 - 有缓存，不会重复下载
@@ -176,7 +176,7 @@ sudo bash /media/*/Ventoy/u-claw-linux/setup-openclaw.sh
 {
   "persistence": [
     {
-      "image": "/ubuntu-24.04.2-desktop-amd64.iso",
+      "image": "/ubuntu-24.04.4-desktop-amd64.iso",
       "backend": "/persistence.dat",
       "autosel": 1
     }
@@ -204,6 +204,7 @@ bootable/
 ├── 3-create-persistence.ps1       Step 3: 持久化镜像
 ├── 4-copy-to-usb.ps1              Step 4: 拷贝到 U 盘
 ├── linux-setup/
+│   ├── format-persistence.sh      格式化持久化镜像
 │   ├── setup-openclaw.sh          一键安装 OpenClaw
 │   ├── start-openclaw.sh          启动脚本
 │   └── openclaw.desktop           桌面快捷方式

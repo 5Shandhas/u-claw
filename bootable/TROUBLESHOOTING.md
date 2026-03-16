@@ -18,7 +18,7 @@
 1. 脚本会自动尝试多个国内镜像（清华、阿里、中科大）
 2. 如果全部失败，可以手动下载：
    - 访问 https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/24.04/
-   - 下载 `ubuntu-24.04.2-desktop-amd64.iso`
+   - 下载 `ubuntu-24.04.4-desktop-amd64.iso`
    - 放到 `bootable/.download-cache/` 目录
 3. 重新运行 `2-download-iso.ps1`
 
