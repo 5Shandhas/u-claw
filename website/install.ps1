@@ -194,9 +194,12 @@ if (Test-Path "$CORE_DIR\node_modules\openclaw") {
         Write-Red "  ✗ package.json 不存在: $CORE_DIR\package.json"
         exit 1
     }
+    $ErrorActionPreference = "Continue"
     & $INSTALL_NODE $NPM_CLI install --prefix "$CORE_DIR" --registry=$MIRROR 2>&1 | Select-Object -Last 5
-    if ($LASTEXITCODE -ne 0) {
-        Write-Red "  ✗ OpenClaw 安装失败，请检查网络"
+    $npmExit = $LASTEXITCODE
+    $ErrorActionPreference = "Stop"
+    if ($npmExit -ne 0) {
+        Write-Red "  ✗ OpenClaw 安装失败 (exit=$npmExit)，请检查网络"
         exit 1
     }
     Write-Green "  ✓ OpenClaw 安装完成"
@@ -213,10 +216,13 @@ if (Test-Path "$CORE_DIR\node_modules\@sliverp\qqbot") {
     Write-Green "  ✓ QQ 插件已安装，跳过"
 } else {
     Write-Cyan "  ↓ 安装 QQ 插件..."
-    try {
-        & $INSTALL_NODE $NPM_CLI install "@sliverp/qqbot@latest" --prefix "$CORE_DIR" --registry=$MIRROR 2>&1 | Out-Null
+    $ErrorActionPreference = "Continue"
+    & $INSTALL_NODE $NPM_CLI install "@sliverp/qqbot@latest" --prefix "$CORE_DIR" --registry=$MIRROR 2>&1 | Out-Null
+    $qqExit = $LASTEXITCODE
+    $ErrorActionPreference = "Stop"
+    if ($qqExit -eq 0) {
         Write-Green "  ✓ QQ 插件安装完成"
-    } catch {
+    } else {
         Write-Yellow "  ⚠ QQ 插件安装失败（不影响主功能）"
     }
 }
