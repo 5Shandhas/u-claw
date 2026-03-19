@@ -241,7 +241,7 @@ SESSION_ID=$(date +%s | tail -c 5)
 
 cat > "$FRP_DIR/frpc.toml" << EOF
 serverAddr = "101.32.254.221"
-serverPort = 443
+serverPort = 22
 auth.method = "token"
 auth.token = "uclaw-remote-2026"
 
