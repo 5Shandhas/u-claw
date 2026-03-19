@@ -141,6 +141,57 @@ else
     echo -e "${DIM}  未检测到局域网 IP${NC}"
 fi
 
+# ---- 检测代理/VPN（macOS）----
+if [[ "$(uname)" == "Darwin" ]]; then
+    PROXY_ON=false
+    PROXY_APP=""
+    # 检测系统代理
+    if scutil --proxy 2>/dev/null | grep -q "HTTPEnable : 1"; then
+        PROXY_ON=true
+    fi
+    # 检测 TUN 模式（utun 接口数量异常多说明有代理）
+    if ifconfig 2>/dev/null | grep -q "utun[2-9]"; then
+        PROXY_ON=true
+    fi
+    # 检测常见代理软件
+    for app in Shadowrocket Surge Clash ClashX clash-meta V2rayU Quantumult sing-box; do
+        if pgrep -fi "$app" >/dev/null 2>&1; then
+            PROXY_APP="$app"
+            PROXY_ON=true
+            break
+        fi
+    done
+
+    if $PROXY_ON; then
+        echo ""
+        echo -e "${RED}  ╔══════════════════════════════════════════╗${NC}"
+        echo -e "${RED}  ║  检测到代理/VPN 正在运行！               ║${NC}"
+        echo -e "${RED}  ╚══════════════════════════════════════════╝${NC}"
+        if [ -n "$PROXY_APP" ]; then
+            echo -e "${YELLOW}    检测到: ${BOLD}${PROXY_APP}${NC}"
+        fi
+        echo ""
+        echo -e "${CYAN}  代理会拦截远程通道连接，导致连不上。${NC}"
+        echo -e "${CYAN}  请暂时关闭代理软件，远程结束后再开。${NC}"
+        echo ""
+        echo -e "${BOLD}  👉 操作：${NC}"
+        echo -e "${BOLD}     1. 在菜单栏找到代理图标，点击关闭/断开${NC}"
+        echo -e "${BOLD}     2. 或直接退出代理软件${NC}"
+        echo -e "${BOLD}     3. 回到这里按回车${NC}"
+        echo ""
+        echo -e -n "${YELLOW}  关闭代理后按回车继续...${NC}"
+        read -r
+
+        # 再次检测
+        sleep 1
+        if scutil --proxy 2>/dev/null | grep -q "HTTPEnable : 1"; then
+            echo -e "${YELLOW}  ⚠ 代理可能还在运行，将尝试继续...${NC}"
+        else
+            echo -e "${GREEN}  [OK] 代理已关闭${NC}"
+        fi
+    fi
+fi
+
 # ---- Step 3: frpc ----
 echo ""
 echo -e "  [3/4] 准备远程通道 ..."
@@ -190,7 +241,7 @@ SESSION_ID=$(date +%s | tail -c 5)
 
 cat > "$FRP_DIR/frpc.toml" << EOF
 serverAddr = "101.32.254.221"
-serverPort = 7000
+serverPort = 443
 auth.method = "token"
 auth.token = "uclaw-remote-2026"
 
